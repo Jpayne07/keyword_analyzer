@@ -7,3 +7,38 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+# Clear existing data
+Keyword.delete_all
+Project.delete_all
+
+# Reset auto-increment index for SQLite
+ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='keywords'")
+ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='projects'")
+
+# Seed Projects
+3.times do |i|
+  Project.create!(
+    name: "Project #{i + 1}",
+    user_id: 1  # Make sure user_id: 1 exists or change this
+  )
+end
+  3.times do |i|
+  Project.create!(
+    name: "Project #{3 + i}",
+    user_id: 2  # Make sure user_id: 1 exists or change this
+  )
+end
+
+# Fetch the created projects to associate keywords
+projects = Project.all
+
+# Seed Keywords
+10000.times do |i|
+  Keyword.create!(
+    keyword: "Keyword Topic #{i + 1}",
+    search_volume: rand(5000..100000),
+    project_id: projects.sample.id
+  )
+end
+
+puts "Seeded #{Project.count} projects and #{Keyword.count} keywords."
