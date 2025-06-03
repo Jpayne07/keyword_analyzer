@@ -20,10 +20,42 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
   </head>
 
-  <body>
-  <h1>Hello, this is a test!</h1>
-    <%= yield %>
+  <body class="bg-gray-100">
+    <div class ="flex md:justify-end flex-nowrap gap-6 p-4
+      bg-gradient-to-r from-red-600 to-red-500
+      text-white 
+      
+                ">
+      <div class ="max-w-7xl mx-auto px-10">
+      <button id="menu-toggle" class="md:hidden text-align-left p-2 text-white rounded">
+        ☰ Menu
+      </button>
+      
+        
+
+     
+       <ul class="hidden md:flex gap-6 text-base xl:text-lg" >
+        
+        <p>DASHBOARD</p>
+        <p>PROJECTS</p>
+        <p>KEYWORDS</p>
+        <p>PROFILE</p>
+        <%= button_to "LOGOUT", session_path, method: :delete if authenticated? %>
+      </ul>
+
+      </div>
+       <nav id="mobile-menu" class="hidden md:hidden m-2 space-y-2 text-xl
+       bg-white border border-gray-300 rounded shadow">
+        <a href="#" class="block text-red-500 font-semibold hover:bg-red-600 hover:text-white m-4 p-1 rounded">Home</a>
+        <a href="#" class="block text-red-500 font-semibold hover:bg-red-600 hover:text-white m-4 p-1 rounded">Projects</a>
+        <a href="#" class="block text-red-500 font-semibold hover:bg-red-600 hover:text-white m-4 p-1 rounded">Contact</a>
+      </nav>
+    </div>
+    <main class="max-w-7xl mx-auto px-10">
+    <%= yield  %>
+    </main>
   </body>
 </html>

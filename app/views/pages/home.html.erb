@@ -1,0 +1,26 @@
+<div>
+  <%# begin grid %>
+  <div class="grid grid-cols-9 gap-4   m-10 content-center">
+    <%# begin small cards %>
+    <div class="col-span-2 min-h-20 bg-white pl-5 rounded drop-shadow-md/5 content-center"><p>KEYWORDS</p><p><%= @totalKeywords %></p></div>
+    <div class="col-span-2 min-h-20 bg-white pl-5 rounded drop-shadow-md/5 content-center"><p>nGrams</p><p>###</p></div>
+    <div class="col-span-2 min-h-20 bg-white pl-5 rounded drop-shadow-md/5 content-center"><p>Time Saved</p><p>###</p></div>
+    <div class="col-span-3 min-h-20 bg-white p-5 rounded drop-shadow-md/5 content-center">
+      <button class ="w-1/1 bg-red-500 text-white py-2 px-5 drop-shadow-md content-center">Add New Project</button>
+    </div>
+    <%# begin table %>
+    <div class="grid grid-cols-5 gap-4 col-span-9 grid-rows-2 m-10 content-center">
+    <turbo-frame id="keyword_table" class="col-span-2 row-span-2">
+        <%= render partial: "keyword_table", locals: { keywords: @keywords, current_page: @current_page, total_pages: @total_pages } %>
+      </turbo-frame>
+      <turbo-frame id="project_table" class="col-span-3  row-span-1">
+        <%= render partial: "project_table", locals: { keywords: @keywords, current_page: @current_page, total_pages: @total_project_pages } %>
+      </turbo-frame>
+      <turbo-frame id="project_insights_table" class="col-span-3">
+        <%= render partial: "project_insights_table", locals: { keywords: @keywords, current_page: @current_page, total_pages: @total_project_pages } %>
+      </turbo-frame>
+    </div>
+
+  
+  </div>
+</div>
