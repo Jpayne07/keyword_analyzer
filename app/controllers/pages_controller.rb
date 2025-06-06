@@ -1,17 +1,18 @@
 class PagesController < ApplicationController
+  include Paginatable
+
   def home
-    per_page = 10
-    page = params.fetch(:page, 1).to_i
-    @current_page = page
-    keyword_offset = (page - 1) * per_page
-    project_offset = (page - 1) * 3
+    @current_page = current_page(3)
+    keyword_data = paginate_keywords
+    @keywords = keyword_data[:data]
+    @totalKeywords = keyword_data[:total]
+    @total_keyword_pages = keyword_data[:total_pages]
 
-    @keywords = Keyword.joins(:project).where(projects: { user_id: session[:current_user_id] }).offset(keyword_offset).limit(per_page)
-    @totalKeywords = Keyword.joins(:project).where(projects: { user_id: session[:current_user_id] }).count
 
-    @total_keyword_pages = (Keyword.count / per_page.to_f).ceil
+    @projects = paginate_projects(3)[:data]
+    @total_pages= paginate_projects(3)[:total_pages]
 
-    @projects = Project.where(projects: { user_id: session[:current_user_id] }).offset(project_offset).limit(3)
-    @total_project_pages = (@projects .count / 3.to_f).ceil
+    @projectsInsights = paginate_project_insights[:data]
+    @total_project_pages = paginate_project_insights[:total_pages]
   end
 end
