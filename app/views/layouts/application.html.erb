@@ -33,15 +33,10 @@
       <button id="menu-toggle" class="md:hidden text-align-left p-2 text-white rounded">
         ☰ Menu
       </button>
-      
-        
-
-     
        <ul class="hidden md:flex gap-6 text-base xl:text-lg" >
-        
-        <p>DASHBOARD</p>
-        <p>PROJECTS</p>
-        <p>KEYWORDS</p>
+        <%= link_to "DASHBOARD", root_path %>
+        <%= link_to "PROJECTS", projects_path %>
+        <%= link_to "KEYWORDS", keywords_path %>
         <p>PROFILE</p>
         <%= button_to "LOGOUT", session_path, method: :delete if authenticated? %>
       </ul>
