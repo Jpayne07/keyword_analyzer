@@ -1,0 +1,16 @@
+<h1>New project</h1>
+
+<%= form_with model: @project do |form| %>
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+  <div >
+    <%= form.label :user_id %>
+    <%= form.text_field :user_id %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
