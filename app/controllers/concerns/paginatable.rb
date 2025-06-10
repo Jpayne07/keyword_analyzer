@@ -5,10 +5,12 @@ module Paginatable
     params.fetch(:page, 1).to_i
   end
 
-  def paginate_keywords(per_page = 10)
+  def paginate_keywords(per_page = 10, specificity = nil)
     offset = (current_page(per_page) - 1) * per_page
+    query = Keyword.joins(:project).where(projects: { user_id: session[:current_user_id] })
+    query = query.where(projects: { id: specificity }) if specificity.present?
     {
-      data: Keyword.joins(:project).where(projects: { user_id: session[:current_user_id] }).offset(offset).limit(per_page),
+      data: query.offset(offset).limit(per_page),
       total: Keyword.joins(:project).where(projects: { user_id: session[:current_user_id] }).count,
       total_pages: (Keyword.count / per_page.to_f).ceil
     }
