@@ -33,11 +33,12 @@ end
 projects = Project.all
 
 # Seed Keywords
-10000.times do |i|
+100.times do |i|
   Keyword.create!(
-    keyword: "Keyword Topic #{i + 1}",
+    name: "Keyword Topic #{i + 1}",
     search_volume: rand(5000..100000),
-    project_id: projects.sample.id
+    project_id: projects.sample.id,
+    url: Faker::Name.name+'.com'
   )
 end
 
