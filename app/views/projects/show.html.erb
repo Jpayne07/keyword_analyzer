@@ -1,3 +1,64 @@
-<h1><%= @projects.name %></h1>
 
+<div class="flex items-center mt-5">
+  <h1 class="text-xl font-semibold pl-10 pr-5 ">Project: </h1>
+    <%= select_tag :project_id,
+      options_from_collection_for_select(@projects, :id, :name),
+      prompt: "Select a project",
+      onchange:  "if(this.value) Turbo.visit('/projects/' + this.value)",
+      class: "text-red-500 text-5xl" %>
+</div>
+
+
+<hr class="mx-10 my-5 border-red-500 border-3">
+<div class="m-10">
+<div class="grid grid-cols-6 gap-4 col-span-9 grid-rows-3 m-10 content-center">
+  <div class=" col-span-2 row-span-2 bg-neutral-200 my-5">
+    <%= render partial: "/components/tables/keyword_table", locals: { 
+        entries: @keywords, 
+        current_page: @current_page, 
+        total_pages: @total_pages,
+        table_config: project_id_kw_table,
+        styling: project_id_kw_table[:styling]
+       } %>
+      <div class="flex gap-2 justify-center mt-4">
+        <% if @current_page > 1 %>
+          <%= link_to "Prev", url_for(page: @current_page - 1), class: "px-2 py-1 border rounded bg-gray-500 hover:bg-gray-200 text-sm" %>
+        <% end %>
+        <% if @current_page < @total_keyword_pages %>
+          <%= link_to "Next", url_for(page: @current_page + 1), class: "px-2 py-1 border rounded bg-gray-500 hover:bg-gray-200 text-sm" %>
+        <% end %>
+      </div>
+  </div>
+  <div class="col-span-3 row-span-2">
+    <%= render partial: "/components/tables/keyword_table", locals: { 
+      entries: @projects, 
+      total_pages: @total_pages,
+      current_page: false,
+      table_config: project_id_insights_table,
+      styling: project_id_insights_table[:styling]
+
+       } %>
+
+    <%= render partial: "/components/tables/keyword_table", locals: { 
+      entries: @insights_test, 
+      total_pages: @total_pages,
+      current_page: false,
+      table_config: project_id_category_table,
+      styling: project_id_category_table[:styling]
+      }%>
+
+      <%= render partial: "/components/tables/keyword_table", locals: { 
+      entries: @insights_test, 
+      total_pages: @total_pages,
+      current_page: false,
+      table_config: project_id_category_table,
+      styling: project_id_category_table[:styling]
+      }%>
+  </div>
+
+</div>
+<%= link_to "Edit", edit_project_path(@project) %>
+<%= button_to "Delete", @project, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
 <%= link_to "Back", project_path %>
+
+</div>
