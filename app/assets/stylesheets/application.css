@@ -8,7 +8,12 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
-
+@import "tailwindcss";
+@layer components {
+.keyword_table {
+    @apply bg-red-200 rounded shadow p-4;
+  }
+}
  
  body {
       font-family: 'Montserrat', sans-serif;

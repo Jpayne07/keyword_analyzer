@@ -1,0 +1,16 @@
+@import "tailwindcss";
+@layer components {
+.home_kw_table {
+    @apply bg-slate-500 col-span-2 px-15 shadow min-h-20 p-5 rounded drop-shadow-md/5 text-white text-left font-medium content-center h-125;
+    
+  }
+.project_id_kw_table{
+  @apply text-gray-600 row-span-3 col-span-2 text-left font-medium 
+}
+.project_id_insights_table{
+  @apply bg-white text-gray-600 text-left font-medium text-sm 
+}
+.project_id_category_table{
+  @apply bg-white text-gray-600 text-left font-medium text-sm 
+}
+}
