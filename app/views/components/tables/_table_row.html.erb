@@ -1,0 +1,19 @@
+<tr class="<%=styling.dig(:table_body_styling, :row_border) %>">
+  <td class="<%= styling.dig(:table_body_styling, :index_styling) %>">
+    <%= current_page ? index + 1 + ((current_page - 1) * 10) : index + 1 %></td>
+  </td>
+    <td class="<%= styling.dig(:table_body_styling, :name_styling) %>"><%= entry.name %></td>
+  <% case entry.class.name %>
+    <% when "Keyword" %>
+        <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%= number_with_delimiter(entry&.search_volume || "Empty") %></td>
+        <%if defined?(includes) && includes&.[](:traffic)%>
+        <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%=entry.est_traffic%></td>
+        <% else nil%>
+    <%end%>
+    <% when "Project" %>
+        <td class="truncate"><%= number_with_delimiter( "Empty") %></td>
+    <% else %>
+    <td class="truncate"><%= entry.name || "N/A" %></td>
+    <td class="truncate">N/A</td>
+    <% end %>
+</tr>
