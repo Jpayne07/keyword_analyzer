@@ -1,6 +1,6 @@
 class Project < ApplicationRecord
   belongs_to :user
-  has_many :keywords
+  has_many :keywords, dependent: :destroy
   validate :projects_count_within_limit, on: :create
 
   @project_limit=5
