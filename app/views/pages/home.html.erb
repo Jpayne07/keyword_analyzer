@@ -9,17 +9,15 @@
       <button class ="w-1/1 bg-red-500 text-white py-2 px-5 drop-shadow-md content-center">Add New Project</button>
     </div>
     <%# begin table %>
-    <div class="grid grid-cols-5 gap-4 col-span-9  m-10 content-center">
-    <turbo-frame id="keyword_table" class="col-span-2 row-span-2">
-        <%= render partial: "keyword_table", locals: { keywords: @keywords, current_page: @current_page, total_pages: @total_pages } %>
-      </turbo-frame>
-      <turbo-frame id="project_table" class="col-span-3">
-        <%= render partial: "project_table", locals: { keywords: @keywords, current_page: @current_page, total_pages: @total_project_pages } %>
-      </turbo-frame>
-      <turbo-frame id="project_insights_table" class="col-span-3">
-        <%= render partial: "project_insights_table", locals: { projectsInsights: @projectsInsights, current_page: @current_page, total_pages: @total_project_pages, table_row_count: 3 } %>
-      </turbo-frame>
+    <div class="grid grid-cols-5 gap-4 col-span-9 m-10 content-center">
+        <%= render partial: "/components/tables/keyword_table", locals: { 
+          entries: @keywords,
+          current_page: @current_page,
+          total_pages: @total_pages,
+          table_config: home_keyword_table} %>
 
+        <%= render partial: "/components/tables/project_table", locals: { keywords: @keywords, kw_columns: @kw_columns, current_page: @current_page, total_pages: @total_project_pages, styling: @kw_table_styling } %>
+        <%= render partial: "/components/tables/project_insights_table", locals: { projectsInsights: @projectsInsights, current_page: @current_page, total_pages: @total_project_pages, table_row_count: 3 } %>
     </div>
 
   
