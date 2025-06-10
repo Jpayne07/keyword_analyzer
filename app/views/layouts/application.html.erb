@@ -7,48 +7,19 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
     <%= yield :head %>
-
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-
   </head>
 
   <body class="bg-gray-100">
-    <div class ="flex md:justify-end flex-nowrap gap-6 p-4
-      bg-gradient-to-r from-red-600 to-red-500
-      text-white 
-      
-                ">
-      <div class ="max-w-7xl mx-auto px-10">
-      <button id="menu-toggle" class="md:hidden text-align-left p-2 text-white rounded">
-        ☰ Menu
-      </button>
-       <ul class="hidden md:flex gap-6 text-base xl:text-lg" >
-        <%= link_to "DASHBOARD", root_path %>
-        <%= link_to "PROJECTS", projects_path %>
-        <%= link_to "KEYWORDS", keywords_path %>
-        <p>PROFILE</p>
-        <%= button_to "LOGOUT", session_path, method: :delete if authenticated? %>
-      </ul>
-
-      </div>
-       <nav id="mobile-menu" class="hidden md:hidden m-2 space-y-2 text-xl
-       bg-white border border-gray-300 rounded shadow">
-        <a href="#" class="block text-red-500 font-semibold hover:bg-red-600 hover:text-white m-4 p-1 rounded">Home</a>
-        <a href="#" class="block text-red-500 font-semibold hover:bg-red-600 hover:text-white m-4 p-1 rounded">Projects</a>
-        <a href="#" class="block text-red-500 font-semibold hover:bg-red-600 hover:text-white m-4 p-1 rounded">Contact</a>
-      </nav>
-    </div>
+    <%= render "layouts/navbar"%>
     <main class="max-w-7xl mx-auto px-10">
     <%= yield  %>
     </main>
