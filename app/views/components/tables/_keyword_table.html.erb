@@ -1,0 +1,46 @@
+<div class="<%=styling[:parent_wrapper]%> p-5 my-5">
+  <h2 class="font-medium text-3xl text-left"><%=table_config[:title]%></h2>
+  <%= render partial: "/components/buttons/search_button"%>
+  <%if styling[:table_scroll_behavior]%>
+  <div class="<%=styling[:table_scroll_behavior]%>">
+  <%end%>
+  <table class="text-ellipsis w-1/1">
+    <thead>
+      <tr>
+        <% table_config[:columns].each do | name | %>
+        <th class="p-1  <%=styling[:table_header_styling] ? styling[:table_header_styling] : nil%>"><%=name%></th>
+        <%end%>
+      </tr>
+    </thead>
+    <tbody class="p-5">
+      <% entries.each_with_index do |entry, index| %>
+        <tr class="border border-dashed border-red-500 ">
+          <td class="border-x border-dashed border-red-500 p-0.5 px-1 text-center h-5 overflow-hidden truncate whitespace-nowrap">
+          <%= current_page ? index + 1 + ((current_page - 1) * 10) : index + 1 %></td>
+          <td class="p-.5 px-1 w-full overflow-hidden truncate whitespace-nowrap"><%= entry.name %></td>
+          <% case entry.class.name %>
+            <% when "Keyword" %>
+              <td class="p-.5 px-1 overflow-hidden truncate whitespace-nowrap"><%= number_with_delimiter(entry&.search_volume || "Empty") %></td>
+            <% when "Project" %>
+              <td class="truncate"><%= number_with_delimiter( "Empty") %></td>
+            <% else %>
+            <td class="truncate"><%= entry.name || "N/A" %></td>
+            <td class="truncate">N/A</td>
+          <% end %>
+
+        </tr>
+      <% end %>
+      <% remaining_rows = 10 - @keywords.size %>
+      <% remaining_rows.times do %>
+        <tr class="opacity-0">
+          <td colspan="3">&nbsp;</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <%if styling[:table_scroll_behavior]%>
+  
+  </div>
+  <%end%>
+  <span>⋯</span>
+</div>
