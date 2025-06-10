@@ -1,5 +1,8 @@
 class ProjectsController < ApplicationController
-    include Paginatable
+  before_action :set_project, only: %i[ show edit update destroy ]
+  include Paginatable
+  include ProjectViewData
+
 
   def index
     @current_page = current_page(3)
@@ -14,7 +17,7 @@ class ProjectsController < ApplicationController
   end
 
   def show
-    @projects = Project.find(params[:id])
+    project_id_url_table
   end
 
   def new
@@ -22,16 +25,33 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    @project = Project.new(product_params)
+    @project = Project.new(project_params)
     if @project.save
       redirect_to @project
     else
       render :new, status: :unprocessable_entity
     end
   end
+  def edit
+  end
 
+  def update
+    if @project.update(project_params)
+      redirect_to @project
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+  def destroy
+      @project.destroy
+      redirect_to projects_path
+  end
   private
-    def product_params
+    def project_params
       params.expect(project: [ :name, :user_id ])
     end
+
+  def set_project
+    @project = Project.find(params[:id])
+  end
 end
