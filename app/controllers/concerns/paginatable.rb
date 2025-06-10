@@ -12,7 +12,7 @@ module Paginatable
     {
       data: query.offset(offset).limit(per_page),
       total: Keyword.joins(:project).where(projects: { user_id: session[:current_user_id] }).count,
-      total_pages: (Keyword.count / per_page.to_f).ceil
+      total_pages: (query.count / per_page.to_f).ceil
     }
   end
 
