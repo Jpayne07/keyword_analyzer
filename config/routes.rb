@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get "ngram/index"
+  get "ngram/show"
+  get "ngram/create"
+  get "ngram/search"
   get "project_issues/index"
   # get "pages/home"
   resource :session
