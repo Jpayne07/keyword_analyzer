@@ -1,10 +1,11 @@
 <div class="<%=styling[:parent_wrapper]%> p-5 my-5">
-  <h2 class="font-medium text-3xl text-left"><%=table_config[:title]%></h2>
-  <%= render partial: "/components/buttons/search_button"%>
-  <% if (scroll_class = styling[:table_scroll_behavior]) %>
-    <div class="<%= scroll_class %>">
+  <% if (table_config[:title]) %>
+    <h2 class="font-medium text-3xl text-left"><%=table_config[:title]%></h2>
   <% end %>
-  <table class="text-ellipsis w-1/1">
+  
+  <%= render partial: "/components/buttons/search_button"%>
+  <div class="<%= styling[:table_scroll_behavior] %> pr-5">
+  <table class="text-ellipsis w-1/1 ">
     <thead>
       <tr>
         <% table_config[:columns].each do | name | %>
@@ -30,8 +31,16 @@
       <% end %>
     </tbody>
   </table>
-  <%if styling[:table_scroll_behavior]%>
   </div>
-  <%end%>
+
   <span>⋯</span>
+  <!--
+  <% if styling[:table_scroll_behavior] === nil && @total_pages > 1 %>
+  <div class="flex justify-center mt-4 space-x-2">
+    <% (1..@total_pages).each do |page| %>
+      <%= link_to page, url_for(page: page), class: "px-2 py-1 rounded border #{'bg-gray-800 text-white' if page == @current_page}" %>
+    <% end %>
+  </div>
+<% end %>
+-->
 </div>
