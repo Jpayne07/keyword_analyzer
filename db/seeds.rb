@@ -1,17 +1,7 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-# Clear existing data
-Keyword.delete_all
-Project.delete_all
 
-# Reset auto-increment index for SQLite
+Keyword.delete_all
+Project.destroy_all
+
 ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='keywords'")
 ActiveRecord::Base.connection.execute("DELETE FROM sqlite_sequence WHERE name='projects'")
 
@@ -33,13 +23,32 @@ end
 projects = Project.all
 
 # Seed Keywords
-100.times do |i|
-  Keyword.create!(
-    name: "Keyword Topic #{i + 1}",
+#
+Keyword.create!(name: "Keyword Topic #{101}",
+    search_volume: 100000,
+    project_id: projects.sample.id,
+    url: 'Amos White.com',
+    estimated_traffic: rand(500..1000),
+    keyword_category: [ 'SEO', 'PPC', 'CRO' ].sample
+)
+
+Keyword.create!(name: "Keyword Topic #{102}",
     search_volume: rand(5000..100000),
     project_id: projects.sample.id,
-    url: Faker::Name.name+'.com'
+    url: 'Amos White.com',
+    estimated_traffic: rand(500..1000),
+    keyword_category: [ 'SEO', 'PPC', 'CRO' ].sample
+)
+100.times do |i|
+  Keyword.create!(
+    name: "Keyword Topic #{i + 3}",
+    search_volume: rand(5000..100000),
+    project_id: projects.sample.id,
+    url: Faker::Name.name+'.com',
+    estimated_traffic: rand(500..1000),
+    keyword_category: [ 'SEO', 'PPC', 'CRO' ].sample
   )
 end
+
 
 puts "Seeded #{Project.count} projects and #{Keyword.count} keywords."
