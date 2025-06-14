@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_09_232719) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_14_050415) do
   create_table "keywords", force: :cascade do |t|
     t.string "name"
     t.integer "project_id", null: false
@@ -18,7 +18,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_09_232719) do
     t.datetime "updated_at", null: false
     t.integer "search_volume"
     t.string "url"
+    t.integer "estimated_traffic"
+    t.string "keyword_category"
     t.index ["project_id"], name: "index_keywords_on_project_id"
+  end
+
+  create_table "ngrams", force: :cascade do |t|
+    t.string "phrase"
+    t.integer "project_id", null: false
+    t.integer "weighted_frequency"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "count"
+    t.index ["project_id"], name: "index_ngrams_on_project_id"
   end
 
   create_table "project_issues", force: :cascade do |t|
@@ -57,6 +69,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_09_232719) do
   end
 
   add_foreign_key "keywords", "projects"
+  add_foreign_key "ngrams", "projects"
   add_foreign_key "project_issues", "projects"
   add_foreign_key "projects", "users"
   add_foreign_key "sessions", "users"
