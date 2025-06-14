@@ -6,8 +6,11 @@
   <% case entry.class.name %>
     <% when "Keyword" %>
         <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%= number_with_delimiter(entry&.search_volume || "Empty") %></td>
-        <%if defined?(includes) && includes&.[](:traffic)%>
+        <%if defined?(includes) && includes&.[](:traffic) && includes&.[](:kw_count)%>
         <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%=entry.est_traffic%></td>
+        <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%=entry.kw_count%></td>
+        <%elsif defined?(includes) && includes&.[](:kw_count)%>
+        <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%=entry.kw_count%></td>
         <% else nil%>
     <%end%>
     <% when "Project" %>
