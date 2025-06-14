@@ -1,16 +1,17 @@
-<h1>New project</h1>
+<h1>New Project</h1>
 
-<%= form_with model: @project do |form| %>
+<%= form_with model: @project, url: projects_path, multipart: true do |form| %>
   <div>
     <%= form.label :name %>
     <%= form.text_field :name %>
   </div>
-  <div >
-    <%= form.label :user_id %>
-    <%= form.text_field :user_id %>
+
+  <div>
+    <%= form.label :csv_file, "Upload CSV" %>
+    <%= form.file_field :csv_file %>
   </div>
 
   <div>
-    <%= form.submit %>
+    <%= form.submit "Create Project and Upload CSV" %>
   </div>
 <% end %>

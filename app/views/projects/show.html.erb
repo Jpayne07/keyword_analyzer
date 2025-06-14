@@ -1,11 +1,11 @@
 
-<div class="flex items-center mt-5">
+<div class="flex items-center mt-5 ">
   <h1 class="text-xl font-semibold pl-10 pr-5 ">Project: </h1>
     <%= select_tag :project_id,
       options_from_collection_for_select(@projects, :id, :name),
       prompt: "Select a project",
       onchange:  "if(this.value) Turbo.visit('/projects/' + this.value)",
-      class: "text-red-500 text-5xl" %>
+      class: "text-red-500 text-2xl overflow-y-scroll"%>
 </div>
 <hr class="mx-10 my-5 border-red-500 border-3">
 <div class="m-10">
@@ -31,19 +31,20 @@
        } %>
 
     <%= render partial: "/components/tables/keyword_table", locals: { 
-      entries: @insights_test, 
+      entries: project_id_category_table[:entries],
+      includes: project_id_insights_table[:include], 
       current_page: false,
       table_config: project_id_category_table,
       styling: project_id_category_table[:styling],
       }%>
 
-      <%= render partial: "/components/tables/keyword_table", locals: { 
-      entries: @insights_test, 
-      total_pages: @total_pages,
-      current_page: false,
-      table_config: project_id_category_table,
-      styling: project_id_category_table[:styling],
-      }%>
+    <%= render partial: "/components/tables/keyword_table", locals: { 
+    entries: project_id_category_table[:entries],
+    total_pages: @total_pages,
+    current_page: false,
+    table_config: project_id_category_table,
+    styling: project_id_category_table[:styling],
+    }%>
   </div>
 
 </div>
