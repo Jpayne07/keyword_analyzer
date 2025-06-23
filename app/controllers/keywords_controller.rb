@@ -10,10 +10,4 @@ class KeywordsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
-
-private
-
-def keyword_params
-  params.require(:keyword).permit(:name, :search_volume, :url, :keyword_category, :project_id)
-end
 end
