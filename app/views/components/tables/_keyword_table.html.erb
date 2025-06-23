@@ -1,12 +1,12 @@
 <div class="<%=styling[:parent_wrapper]%> p-5 my-5">
   <% if (table_config[:title]) %>
-    <h2 class="font-medium text-3xl text-left"><%=table_config[:title]%></h2>
+    <h2 class="font-medium text-lg text-left"><%=table_config[:title]%></h2>
   <% end %>
-  
-  <%= render partial: "/components/buttons/search_button"%>
+  <%# <%= render partial: "/components/buttons/search_button"%>
+ 
   <div class="<%= styling[:table_scroll_behavior] %> pr-5">
-  <table class="text-ellipsis w-1/1 ">
-    <thead>
+  <table class="text-ellipsis w-full border-1 border-red-500 ">
+    <thead class="sticky top-0 z-10 <%styling[:table_header_styling]%>%">
       <tr>
         <% table_config[:columns].each do | name | %>
         <th class="p-1  <%=styling[:table_header_styling] ? styling[:table_header_styling] : nil%>"><%=name%></th>
@@ -20,27 +20,12 @@
         index: index,
         current_page: current_page,
         styling: styling,
-        includes: defined?(includes) ? includes : {}
+        includes: defined?(includes) ? includes : {},
+        entry_key: entry_key
       } %>
     <% end %>
-      <% remaining_rows = 10 - @keywords.size %>
-      <% remaining_rows.times do %>
-        <tr class="opacity-0">
-          <td colspan="3">&nbsp;</td>
-        </tr>
-      <% end %>
+
     </tbody>
   </table>
   </div>
-
-  <span>⋯</span>
-  <!--
-  <% if styling[:table_scroll_behavior] === nil && @total_pages > 1 %>
-  <div class="flex justify-center mt-4 space-x-2">
-    <% (1..@total_pages).each do |page| %>
-      <%= link_to page, url_for(page: page), class: "px-2 py-1 rounded border #{'bg-gray-800 text-white' if page == @current_page}" %>
-    <% end %>
-  </div>
-<% end %>
--->
 </div>
