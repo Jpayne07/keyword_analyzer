@@ -16,12 +16,16 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    
   </head>
 
   <body class="bg-gray-100">
     <%= render "layouts/navbar"%>
-    <main class="max-w-7xl mx-auto px-10">
+    <main class="mx-auto px-10" id= "main">
+    
     <%= yield  %>
     </main>
+    <%= turbo_frame_tag "modal"%>
   </body>
 </html>
