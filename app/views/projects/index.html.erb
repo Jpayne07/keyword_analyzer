@@ -1,9 +1,7 @@
 <div class="flex justify-center gap-20 my-10 h-125 items-center">
     <div class="w-sm max-w-400">
-        <%= render partial: "/components/tables/project_table", locals: { projects: @projects, current_page: @current_page, total_pages: @total_pages} %>
         <%= link_to "Add New Project", new_project_path, class: "text-center block w-full bg-red-500 text-white py-2 my-2 px-5 drop-shadow-md content-center" %>
     </div>
     <div class="w-sm max-w-400">
-    <%= render partial: "/components/tables/project_insights_table", locals: { projectsInsights: @projectsInsights, current_page: @current_page_insights, total_project_pages: @total_project_pages, table_row_count: @insights_per_page }  %>
     </div>
 </div>
