@@ -18,6 +18,13 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   root "pages#home"
+
+  post "/search", to: "projects#search"
+  post "/search_insights", to: "projects#search_insights"
+  post "/search_ngram", to: "projects#search_ngram"
+  get "/projects/modal", to: "projects#modal", as: :modal
+  get "/projects/export_zip", to: "projects#export_zip_file", as: :export_zip_file
+
   resources :projects
   resources :keywords
 end
