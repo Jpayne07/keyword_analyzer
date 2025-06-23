@@ -11,11 +11,12 @@
     <%# begin table %>
     <div class="grid grid-cols-5 gap-4 col-span-9 m-10 content-center">
         <%= render partial: "/components/tables/keyword_table", locals: { 
-          entries: @keywords,
-          current_page: @current_page,
-          total_pages: @total_pages,
-          table_config: home_keyword_table,
-          styling: home_keyword_table[:styling]} %>
+        entries: @keywords, 
+        current_page: @current_page, 
+        table_config: project_id_kw_table,
+        styling: project_id_kw_table[:styling],
+        entry_key: project_id_kw_table[:entry_key]
+       } %>
         <div class="col-span-3">
         <%= render partial: "/components/tables/project_table", locals: { keywords: @keywords, kw_columns: @kw_columns, current_page: @current_page, total_pages: @total_project_pages, styling: home_projects_table[:styling]} %>
         <%= render partial: "/components/tables/project_insights_table", locals: { projectsInsights: @projectsInsights, current_page: @current_page, total_pages: @total_project_pages, styling: home_projects_table[:styling]} %>
