@@ -1,0 +1,9 @@
+<%= turbo_stream.update "keyword_table" do %>
+  <%= render partial: "components/tables/keyword_table", locals: {
+    entries: @keywords,
+    current_page: false,
+    table_config: @table_config,
+    styling: @table_config[:styling],
+    entry_key: @table_config[:entry_key]
+  } %>
+<% end %>

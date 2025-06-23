@@ -1,0 +1,10 @@
+<%= turbo_stream.update "search_insights_table" do %>
+  <%= render partial: "components/tables/keyword_table", locals: {
+    entries: @url_list,
+    includes: project_id_insights_table[:include],
+    current_page: false,
+    table_config: project_id_insights_table,
+    styling: project_id_insights_table[:styling],
+    entry_key: project_id_insights_table[:entry_key]
+  } %>
+<% end %>

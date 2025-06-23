@@ -1,0 +1,11 @@
+<%= turbo_stream.update "phrase_table" do %>
+  <%= render partial: "components/tables/keyword_table", locals: {
+    entries: @phrases,
+    total_pages: @total_pages,
+    current_page: false,
+    table_config: project_id_ngram_table,
+    styling: project_id_ngram_table[:styling],
+    entry_key: project_id_ngram_table[:entry_key],
+    includes: project_id_ngram_table[:include], 
+  } %>
+<% end %>
