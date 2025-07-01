@@ -2,7 +2,7 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: %i[ show edit update destroy ]
   include Paginatable
   include ProjectViewData
-  include KwToNgram
+  include PhraseParser
   include ProjectsHelper
   include ExportToZip
   include ImportKeywords
@@ -72,13 +72,20 @@ class ProjectsController < ApplicationController
     @project.user = current_user
     if @project.save
       if params[:project][:csv_file].present?
-        print "csv present"
         import_keywords_from_csv(@project, params[:project][:csv_file])
-        # show logic for processing ngram here
+        @items = url_pattern[1] # from phrase_parser.rb
+        # .order("count_DESC")
+        # .limit(10)
+        render turbo_stream: turbo_stream
+        .update("modal",
+        partial: "components/modals/category_selection_form",
+        locals: { items: @items, key_holder: [] })
         kw_to_ngram
-        redirect_to @project, notice: "Project created with keywords."
-        load_items
+        return
       end
+    respond_to do |format|
+      format.html { redirect_to @project }
+    end
     else
       render :new, status: :unprocessable_entity
     end
@@ -89,6 +96,24 @@ class ProjectsController < ApplicationController
     @project = Project.new
     @project.keywords.build
   end
+
+ def category_select
+  selected = params[:selected_categories] || []
+  project_id = params[:project_id]
+
+  return if selected.empty?
+
+  # For each keyword, check if its URL includes any selected category string
+  Keyword.where(project_id: project_id).find_each do |kw|
+    matched_category = selected.find { |cat| kw.url.downcase.include?(cat.downcase) }
+
+    if matched_category
+      kw.update(keyword_category: matched_category)
+    end
+  end
+
+  # redirect_to project_path(project_id), notice: "Categories applied to matching URLs"
+end
   def update
     if @project.update(project_params)
       redirect_to @project
