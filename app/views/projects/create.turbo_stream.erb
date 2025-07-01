@@ -1,0 +1,13 @@
+<turbo-stream action="update" target="modal">
+  <template>
+    <div class="modal" data-project-id="<%= @project.id %>">
+      <h2>Processing your project…</h2>
+    <div class="spinner"></div>
+    <div>
+    <%= link_to "Close", "#", data: {
+        controller: "modals",
+        action: "modals#close"
+      }, class: "cancel-button" %>
+    </div>
+  </template>
+</turbo-stream>

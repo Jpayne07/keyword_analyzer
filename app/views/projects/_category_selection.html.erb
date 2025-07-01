@@ -1,0 +1,16 @@
+<% @items.each do |key, value| %>
+  <%key_holder << key %>
+<% end %>
+<div class="modal">
+  <%= form_with url: categories_select_path, method:post, local: true do |form|%>
+    <% key_holder.each do |category|  %>
+      <div class="category-checkbox">
+        <%= check_box_tag "selected_categories[]", category,
+                          false,
+                          id: "category_#{category.parameterize}" %>
+        <%= label_tag "category_#{category.parameterize}", category.humanize %>
+      </div>
+    <%end%>
+  <%= submit_tag "Save Selected Categories" %>
+  <% end %>
+</div>
