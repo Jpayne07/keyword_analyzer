@@ -21,9 +21,7 @@ module ProjectsHelper
       kw_count: true
     }
   }
-  end
-
-
+    end
   def project_id_insights_table
     {
     title: "URLs",
