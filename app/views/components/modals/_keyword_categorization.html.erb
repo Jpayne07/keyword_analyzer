@@ -1,0 +1,15 @@
+<%= turbo_frame_tag "modal" do %>
+  <div class="modal">
+  <div class="spinner"></div>
+    <div>
+      <p>Loading</p>
+    <div>
+      <%= link_to "Cancel", "#", data:{
+        controller: "modals",
+        action: "modals#close"
+      }, class: "cancel-button"%>
+
+    </div>
+  </div>
+
+<%end%>
