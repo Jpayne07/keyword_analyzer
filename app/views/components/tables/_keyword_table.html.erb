@@ -1,11 +1,11 @@
 <div class="<%=styling[:parent_wrapper]%> p-5 my-5">
   <% if (table_config[:title]) %>
-    <h2 class="font-medium text-lg text-left"><%=table_config[:title]%></h2>
+    <h2 class="<%=styling[:table_heading]%> font-medium text-lg text-left"><%=table_config[:title]%></h2>
   <% end %>
   <%# <%= render partial: "/components/buttons/search_button"%>
  
   <div class="<%= styling[:table_scroll_behavior] %> pr-5">
-  <table class="text-ellipsis w-full border-1 border-red-500 ">
+  <table class="text-ellipsis w-full ">
     <thead class="sticky top-0 z-10 <%styling[:table_header_styling]%>%">
       <tr>
         <% table_config[:columns].each do | name | %>

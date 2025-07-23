@@ -3,28 +3,60 @@
     <%= current_page ? index + 1 + ((current_page - 1) * 10) : index + 1 %></td>
   </td>
     
-    <td class="<%= styling.dig(:table_body_styling, :name_styling) %>"><%= entry[entry_key] %></td>
+
   <% case entry.class.name %>
     <% when "Keyword" %>
-      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%= number_with_delimiter(entry&.search_volume || "Empty") %></td>
+    <td class="<%= styling.dig(:table_body_styling, :name_styling) %>">
+      <%= entry[entry_key] %>
+    </td>
+      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
+        <%= number_with_delimiter(entry&.search_volume || "Empty") %>
+      </td>
+
       <%if defined?(includes) && includes&.[](:traffic) && includes&.[](:kw_count)%>
-      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%=entry.estimated_traffic%></td>
-      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%=entry.kw_count%></td>
+      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
+        <%=entry.estimated_traffic%>
+      </td>
+      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
+        <%=entry.kw_count%>
+      </td>
+
       <%elsif defined?(includes) && includes&.[](:kw_count)%>
-      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%=entry.kw_count%></td>
+      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
+        <%=entry.kw_count%>
+      </td>
+
       <% else nil%>
     <%end%>
     <% when "Ngram" %>
-      <td class="<%= styling.dig(:table_body_styling, :phrase_styling) %>"><%= number_with_delimiter(entry&.weighted_frequency || "Empty") %></td>
+    <td class="<%= styling.dig(:table_body_styling, :name_styling) %>">
+      <%= entry[entry_key] %>
+    </td>
+      <td class="<%= styling.dig(:table_body_styling, :phrase_styling) %>">
+        <%= number_with_delimiter(entry&.weighted_frequency || "Empty") %>
+      </td>
+
       <%if defined?(includes) && includes&.[](:traffic) && includes&.[](:kw_count)%>
-      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%=entry.est_traffic%></td>
-      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%=entry.kw_count%></td>
+      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
+        <%=entry.est_traffic%>
+      </td>
+      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
+        <%=entry.kw_count%>
+      </td>
+
       <%elsif defined?(includes) && includes&.[](:kw_count)%>
-      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>"><%=entry.count%></td>
+      <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
+        <%=entry.count%>
+      </td>
 
   <%end%>
     <% when "Project" %>
-      <td class="truncate"><%= number_with_delimiter( "Empty") %></td>
+    <td class="<%= styling.dig(:table_body_styling, :name_styling) %>">
+      <%= link_to entry[entry_key], project_path(entry)%>
+    </td>
+      <td class="<%= styling.dig(:table_body_styling, :phrase_styling) %>">
+        <%= number_with_delimiter(entry&.keywords.sum("search_volume") || "Empty") %>
+      </td>
 
 
     <% else %>
