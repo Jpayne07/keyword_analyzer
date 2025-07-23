@@ -20,11 +20,13 @@ class ProjectsController < ApplicationController
   end
   def index # all projects
     @current_page = current_page(3)
-    @projects = Project.all.limit(20)
+    @projects = Project
+        .where(user: current_user)
     @current_page_insights = current_page(6)
     @insights_per_page = 6
     @projectsInsights = paginate_project_insights[:data]
     @total_project_pages = paginate_project_insights[:total_pages]
+    @insights = Insight.new(current_user)
   end
   def show # individual projects
     project_id_tables # concern which processes the data
@@ -81,8 +83,10 @@ class ProjectsController < ApplicationController
         partial: "components/modals/category_selection_form",
         locals: { items: @items, key_holder: [] })
         kw_to_ngram
+
         return
       end
+
     respond_to do |format|
       format.html { redirect_to @project }
     end
@@ -100,19 +104,32 @@ class ProjectsController < ApplicationController
  def category_select
   selected = params[:selected_categories] || []
   project_id = params[:project_id]
+  @project = Project.find(project_id)
 
   return if selected.empty?
-
+  updated = false
   # For each keyword, check if its URL includes any selected category string
   Keyword.where(project_id: project_id).find_each do |kw|
-    matched_category = selected.find { |cat| kw.url.downcase.include?(cat.downcase) }
+    matching_categories = selected.select { |cat| kw.url.to_s.downcase.include?(cat.downcase) }
 
-    if matched_category
-      kw.update(keyword_category: matched_category)
+    # Return early if no matches
+    next if matching_categories.empty?
+
+    # Find the highest-volume match
+    best_category = matching_categories.max_by do |cat|
+      Keyword
+        .where(project_id: project_id, keyword_category: cat)
+        .sum(:search_volume)
     end
-  end
 
-  # redirect_to project_path(project_id), notice: "Categories applied to matching URLs"
+    kw.update(keyword_category: best_category)
+  end
+  if updated
+    flash[:notice] = "Categories applied to matching URLs, redirected to new project."
+  else
+    flash[:alert] = "No matches found for selected categories"
+  end
+  redirect_to project_path(project_id), notice: "Categories applied to matching URLs"
 end
   def update
     if @project.update(project_params)
