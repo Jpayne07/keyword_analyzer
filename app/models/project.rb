@@ -2,6 +2,7 @@ class Project < ApplicationRecord
   belongs_to :user
   has_many :keywords, dependent: :destroy
   has_many :ngrams, dependent: :destroy
+  # validates :name, presence: true
   validate :projects_count_within_limit, on: :create
   accepts_nested_attributes_for :keywords, allow_destroy: true
   @project_limit=5

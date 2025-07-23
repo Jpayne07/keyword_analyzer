@@ -1,17 +1,57 @@
+<div id="overlay"></div>
 <% @items.each do |key, value| %>
   <%key_holder << key %>
 <% end %>
-<div class="modal">
-  <%= form_with url: category_select_path, method: :post, local: true do |form| %>
-    <% key_holder.each do |category|  %>
-      <div class="category-checkbox">
+
+<div class="modal bg-red-600 rounded-2xl shadow-2xl max-w-md w-full mx-auto modal-enter">
+  <div class="flex items-center justify-between p-3 border-b border-red-400">
+    <div class="w-full">
+      <h2 class="text-lg font-semibold text-white mb-4">Category Suggestions</h2>
+      <div class="flex items-center gap-2 mb-6">
+        <% if flash[:alert] %>
+          <div class="bg-red-100 text-red-800 px-4 py-2 rounded mb-3">
+            <%= flash[:alert] %>
+          </div>
+        <% end %>
+  <p class="text-red-100">
+    We've identified some URL patterns. Please choose those which match below:
+  </p>
+
+  <div class="relative group">
+    <button class="px-2 py-1 bg-black text-white rounded text-sm leading-none">
+      ?
+    </button>
+
+    <div class="absolute bottom-full left-1/2 -translate-x-full translate-y-full mb-2 
+                bg-gray-800 text-white text-sm rounded px-4
+                opacity-0 group-hover:opacity-100 transition-opacity duration-300 
+                max-w-96 w-screen text-left break-words z-10 pointer-events-none">
+      <p>
+        By analyzing the most common phrases in your URLs, we've identified what is 
+        likely the most common foldering for your URLs.
+      </p>
+    </div>
+  </div>
+</div>
+  <div class="space-y-3 max-h-64 overflow-y-auto">
+    <%= form_with url: category_select_path, method: :post, data: { turbo: false }, local: true do |form| %>
+      <% key_holder.each do |category|  %>
+      <label for="category_<%= category.parameterize %>" class="category-checkbox flex items-center my-3 p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors cursor-pointer text-white">
         <%= check_box_tag "selected_categories[]", category,
                           false,
-                          id: "category_#{category.parameterize}" %>
-        <%= label_tag "category_#{category.parameterize}", category.humanize %>
-      </div>
+                          id: "category_#{category.parameterize}",
+                          class: "cursor-pointer mr-2" %>
+        <span><%= category.humanize %></span>
+    </label>
     <%end%>
-<%= hidden_field_tag :project_id, @project.id %>
-  <%= submit_tag "Save Selected Categories" %>
-  <% end %>
+  <%= hidden_field_tag :project_id, @project.id %>
+    <div class="flex justify-center items-center h-full">
+      <%= form.submit "Save Selected Categories", class:"text-red-500 bg-white p-3 my-3 rounded-lg w-90 cursor-pointer" %>
+    </div>
+</div>
+  
+<% end %>
+    
+    </div>
+  </div>
 </div>
