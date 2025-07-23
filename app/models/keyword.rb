@@ -1,6 +1,9 @@
 class Keyword < ApplicationRecord
   belongs_to :project
   before_validation :normalize_url
+  validates :name, presence: true
+  validates :search_volume, presence: true
+  validates :url, presence: true
   require "csv"
 
 
