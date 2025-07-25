@@ -27,9 +27,12 @@
 h1{
     font-size:48px;
 }
+a {
+  text-decoration: underline;
 
+}
 p {
-    font-size: 16px;
+    font-size: 24px;
 }
 
 
@@ -83,3 +86,4 @@ p {
 button{
   cursor: pointer;
 }
+
