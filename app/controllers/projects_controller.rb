@@ -75,9 +75,7 @@ class ProjectsController < ApplicationController
     if @project.save
       if params[:project][:csv_file].present?
         import_keywords_from_csv(@project, params[:project][:csv_file])
-        @items = url_pattern[1] # from phrase_parser.rb
-        # .order("count_DESC")
-        # .limit(10)
+        @items = url_pattern[1]
         render turbo_stream: turbo_stream
         .update("modal",
         partial: "components/modals/category_selection_form",
@@ -146,5 +144,8 @@ end
     def project_params
       params.expect(project: [ :name, :user_id ])
       params.require(:project).permit(:name)
+    end
+    def set_project
+    @project = current_user.projects.find(params[:id])
     end
 end

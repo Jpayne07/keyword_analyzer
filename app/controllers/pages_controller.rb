@@ -2,7 +2,7 @@ class PagesController < ApplicationController
   include Paginatable
 
   def home
-    @keywords = Keyword.joins(:project).where(projects: { user_id: current_user.id })
+    @keywords = Keyword.joins(:project).where(projects: { user_id: current_user.id }).limit(100)
     @kw_table_styling = "home_kw_table"
     @projects_table_styling = "home_projects_table"
     @current_page = current_page(10)
