@@ -1,12 +1,13 @@
 <div>
   <%# begin grid %>
-  <div class="grid grid-cols-9 gap-4 m-10 content-center">
+  <div class="grid grid-cols-9 gap-4 content-center max-w-6xl mx-auto my-10">
     <%# begin small cards %>
-    <div class="col-span-2 min-h-20 bg-white pl-5 rounded drop-shadow-md/5 content-center"><p>KEYWORDS</p><p><%= @totalKeywords %></p></div>
-    <div class="col-span-2 min-h-20 bg-white pl-5 rounded drop-shadow-md/5 content-center"><p>nGrams</p><p>###</p></div>
-    <div class="col-span-2 min-h-20 bg-white pl-5 rounded drop-shadow-md/5 content-center"><p>Time Saved</p><p>###</p></div>
+    <div class="col-span-3 min-h-20 bg-white pl-5 rounded drop-shadow-md/5 content-center"><p>KEYWORDS</p><p><%= @keyword_count %></p></div>
+    <div class="col-span-3 min-h-20 bg-white pl-5 rounded drop-shadow-md/5 content-center"><p>nGrams</p><p><%=@ngram_count%></p></div>
+    <%# <div class="col-span-2 min-h-20 bg-white pl-5 rounded drop-shadow-md/5 content-center"><p>Time Saved</p><p>###</p></div> %>
     <div class="col-span-3 min-h-20 bg-white p-5 rounded drop-shadow-md/5 content-center">
-      <button class ="w-1/1 bg-red-500 text-white py-2 px-5 drop-shadow-md content-center">Add New Project</button>
+      <%= link_to "Add New Project", new_project_path, class: "text-center block bg-red-500 text-white p-2 my-2 px-5 drop-shadow-md content-center " %>
+
     </div>
     <%# begin table %>
     <div class="grid grid-cols-5 gap-4 col-span-9 m-10 content-center">
@@ -18,11 +19,18 @@
         entry_key: project_id_kw_table[:entry_key]
        } %>
         <div class="col-span-3">
-        <%= render partial: "/components/tables/project_table", locals: { keywords: @keywords, kw_columns: @kw_columns, current_page: @current_page, total_pages: @total_project_pages, styling: home_projects_table[:styling]} %>
-        <%= render partial: "/components/tables/project_insights_table", locals: { projectsInsights: @projectsInsights, current_page: @current_page, total_pages: @total_project_pages, styling: home_projects_table[:styling]} %>
+       <!--  render partial: "/components/tables/keyword_table", locals: { entries: @keywords, kw_columns: @kw_columns, current_page: @current_page, total_pages: @total_project_pages, styling: home_projects_table[:styling]} %>
+        < render partial: "/components/tables/keyword_table", locals: { entries: @projectsInsights, current_page: @current_page, total_pages: @total_project_pages, styling: home_projects_table[:styling]} %>-->
+      <%= render partial: "/components/tables/keyword_table", locals: { 
+        entries: @projects, 
+        current_page: @current_page, 
+        table_config: home_projects_table,
+        styling: home_projects_table[:styling],
+        entry_key: home_projects_table[:entry_key]
+       } %>
         </div>
+        
     </div>
-
-  
+    
   </div>
 </div>

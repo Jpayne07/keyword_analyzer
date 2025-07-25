@@ -22,10 +22,18 @@
 
   <body class="bg-gray-100">
     <%= render "layouts/navbar"%>
+    <% if flash[:notice] %>
+      <div id="flash-notice" class="p-4 bg-green-200 text-green-800 rounded " data-controller="hide-on-click">
+        <%= flash[:notice] %>
+        <button class="cursor-pointer px-10" data-action="hide-on-click#hide">X</button>
+      </div>
+    <% end %>
     <main class="mx-auto px-10" id= "main">
     
     <%= yield  %>
     </main>
+    
     <%= turbo_frame_tag "modal"%>
+    
   </body>
 </html>

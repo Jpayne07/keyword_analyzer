@@ -1,19 +1,32 @@
-<h1>New Project</h1>
+<%= form_with model: @project, url: projects_path, multipart: true, class: "max-w-xl mx-auto my-20 p-10 bg-white rounded", data: { controller: "modals", action: "turbo:submit-start->modals#open" } do |form| %>
+<h2 class="text-2xl font-bold mb-6">New Project</h2>
+<% if @project.errors.any? %>
+  <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+    <h2 class="font-bold mb-2">Please fix the following errors:</h2>
+    <ul>
+      <% @project.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
-<%= form_with model: @project, url: projects_path, multipart: true, data: { controller: "modals", action: "turbo:submit-start->modals#open" } do |form| %>
-  <div>
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+  <div class="mb-4">
+    <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-1"  %>
+    <%= form.text_field :name, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" %>
+  </div>
   </div>
 
-  <div>
-    <%= form.label :csv_file, "Upload CSV" %>
-    <%= form.file_field :csv_file %>
+  <div class="mb-6">
+    <%= form.label :csv_file, "Upload CSV", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.file_field :csv_file, accept: ".csv", class: "w-full border border-gray-300 rounded px-3 py-2 bg-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-red-700 file:text-white hover:file:bg-red-700" %>
   </div>
 
   
 
-  <div>
-    <%= form.submit "Create Project and Upload CSV" %>
+   <!-- Submit -->
+  <div class="text-center">
+    <%= form.submit "Create Project", class: "bg-zinc-400 hover:bg-zinc-500 text-white font-semibold px-6 py-2 rounded w-full" %>
   </div>
+
 <% end %>

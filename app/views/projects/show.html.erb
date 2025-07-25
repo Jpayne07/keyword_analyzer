@@ -1,6 +1,5 @@
 
 
-<%= link_to "Modal", modal_path, data: { turbo_frame: 'modal' } %>
 <div class="flex items-center mt-5 ">
   <h1 class="text-xl font-semibold pl-10 pr-5 ">Project: </h1>
     <%= select_tag :project_id,
@@ -9,12 +8,20 @@
       onchange:  "if(this.value) Turbo.visit('/projects/' + this.value)",
       class: "text-red-500 text-2xl overflow-y-scroll"%>
 </div>
-<hr class="mx-10 my-5 border-red-500 border-3">
+<hr class="mx-10 border-red-500 border-3">
 <div class="m-10">
   
-<div class="grid grid-cols-6 gap-4 col-span-9 m-10 content-center">
-  <div class=" col-span-2 bg-neutral-200 my-5">
+<div class="grid grid-cols-6 gap-5 col-span-9 m-10 content-center">
+  <div class=" col-span-2">
+    <div class="grid grid-cols-1 gap-5">
+    <div class="mt-4 p-5 rounded-xl shadow-xl bg-white backdrop-blur-sm border border-white/20">
+      <%= column_chart @keywords.group(:keyword_category).count, height: "300px", **glass_red_chart_options, title: "Categories", ytitle: "KW Count" %>
+    </div>
     
+    <div class="mt-4 p-5 rounded-xl shadow-xl bg-white backdrop-blur-sm border border-white/20">
+      <%= column_chart @top_urls.limit(10).map { |k| [k.name.sub(%r{^[^/]+}, ""), k.kw_count.to_i] }, **glass_red_chart_options, title: "URLs", ytitle: "KW Count" %>
+    </div>
+  
     <%= turbo_frame_tag "keyword_table" do %>
     <%= render partial: "/components/tables/keyword_table", locals: { 
         entries: @keywords, 
@@ -26,8 +33,10 @@
       <% end %>
       
   </div>
-  <div class="col-span-3 h-full flex flex-col w-full">
-    
+  </div>
+  
+  <div class="col-span-3 h-full flex flex-col w-full gap-5">
+  
     <%= turbo_frame_tag "search_insights_table" do %>
     <%= render partial: "/components/tables/keyword_table", locals: { 
       entries: project_id_insights_table[:urls],
@@ -40,8 +49,8 @@
        } %>
       <% end %>
 
-     <%# <%= turbo_frame_tag "category_table" do %>
-    <%# <%= render partial: "/components/tables/keyword_table", locals: { 
+     <%= turbo_frame_tag "category_table" do %>
+     <%= render partial: "/components/tables/keyword_table", locals: { 
       entries: project_id_category_table[:entries],
       includes: project_id_insights_table[:include], 
       current_page: false,
@@ -49,7 +58,7 @@
       styling: project_id_category_table[:styling],
       entry_key: project_id_category_table[:entry_key]
       }%>
-    <%# <%end %> 
+    <%end %> 
 
 
     <%= turbo_frame_tag "phrase_table" do %>
@@ -65,12 +74,12 @@
     <%end%>
   </div>
   
-  <div class="grid grid-rows-4 my-5 gap-5">
+  <div class="grid grid-rows-4 gap-5">
     <div class="filter_cards">
       <span class="text-gray-500">Keywords</span>
     <%= form_with url: search_path, html: { class: "text-center" }, method: :post, data: { turbo_frame: "keyword_table" } do %>
     <div class="border-2 border-red-500 text-center rounded-xl align-middle">
-    <%= text_field_tag :query, params[:query], placeholder: "All Keywords", class: "text-center w-35 mx-2 text-red-500  p-1" %>
+    <%= text_field_tag :query, params[:query], placeholder: "All Keywords", class: "text-center 2xl:w-35 2xl:text-lg md:w-25 md:text-xs mx-2 text-red-500  p-1" %>
     </div>
     <%= hidden_field_tag :project_id, @project.id %>
     <%# <%= submit_tag "Search" %>
@@ -81,7 +90,7 @@
         <span class="text-gray-500">URLs</span>
       <%= form_with url: search_insights_path, method: :post, data: { turbo_frame: "search_insights_table" } do %>
         <div class="border-2 border-red-500 text-center rounded-xl align-middle">
-    <%= text_field_tag :query, params[:query], placeholder: "All URLs...",class: "text-center w-35 mx-2 text-red-500  p-1" %>
+    <%= text_field_tag :query, params[:query], placeholder: "All URLs...",class: "text-center 2xl:w-35 2xl:text-lg md:w-25 md:text-xs mx-2 text-red-500  p-1" %>
     </div>
     <%= hidden_field_tag :project_id, @project.id %>
     <% end %>
@@ -91,7 +100,7 @@
       <%= form_with url: search_ngram_path, method: :post do %>
           <div class="border-2 border-red-500 text-center rounded-xl align-middle">
 
-      <%= text_field_tag :query, params[:query], placeholder: "All Categories...",class: "text-center w-35 mx-2 text-red-500  p-1" %>
+      <%= text_field_tag :query, params[:query], placeholder: "All Categories...",class: "text-center 2xl:w-35 2xl:text-lg md:w-25 md:text-xs mx-2 text-red-500  p-1" %>
       </div>
       <% end %>
     </div>
@@ -99,7 +108,7 @@
           <span class="text-gray-500">Phrases</span>
       <%= form_with url: search_ngram_path, method: :post do %>
         <div class="border-2 border-red-500 text-center rounded-xl align-middle">
-      <%= text_field_tag :query, params[:query], placeholder: "All Ngrams...",class: "text-center w-35 mx-2 text-red-500  p-1" %>
+      <%= text_field_tag :query, params[:query], placeholder: "All Ngrams...",class: "text-center 2xl:w-35 2xl:text-lg md:w-25 md:text-xs mx-2 text-red-500  p-1" %>
       <%= hidden_field_tag :project_id, @project.id %>
       </div>
       <% end %>
@@ -111,8 +120,8 @@
       </div>
 
 </div>
-<%= link_to "Edit", edit_project_path(@project) %>
-<%= button_to "Delete", @project, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
-<%= link_to "Back", project_path %>
+<%# <%= link_to "Edit", edit_project_path(@project) %>
+<%# <%= button_to "Delete", @project, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
+<%# <%= link_to "Back", project_path %> 
 
 </div>
