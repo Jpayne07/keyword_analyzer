@@ -5,8 +5,8 @@ module ProjectsHelper
     columns: [ "#", "Keyword", "Search Volume" ],
     entry_key: "name",
     styling: {
-      parent_wrapper: "shadow-md text-gray-600 row-span-3 col-span-2 text-left font-medium h-auto bg-white",
-      table_scroll_behavior: "overflow-y-scroll max-h-150",
+      parent_wrapper: "text-gray-600 row-span-3 col-span-2 text-left font-medium h-auto bg-white mt-4 px-5 rounded-xl shadow-xl",
+      table_scroll_behavior: "overflow-y-scroll max-h-67",
       table_header_styling: "bg-neutral-200",
 
       table_body_styling: {
@@ -29,9 +29,9 @@ module ProjectsHelper
     urls: @top_urls,
     entry_key: "name",
     styling: {
-      parent_wrapper: "shadow-md bg-white text-gray-600 text-left font-medium text-sm flex-1",
+      parent_wrapper: "bg-white text-gray-600 text-left font-medium text-sm flex-1 mt-4 px-5 rounded-xl shadow-xl h-[340px]",
       table_header_styling: "text-red-500 text-sm bg-white ",
-      table_scroll_behavior: "overflow-y-scroll w-full flex-1 max-h-65",
+      table_scroll_behavior: "overflow-y-scroll w-full flex-1  h-60",
       overflow: "overflow-y-scroll ",
       table_body_styling: {
         row_border: "border border-dashed border-red-500",
@@ -55,9 +55,9 @@ module ProjectsHelper
     entries: @top_categories,
     entry_key: "name",
     styling: {
-      parent_wrapper: "shadow-md bg-white text-gray-600 text-left font-medium text-sm flex-1",
+      parent_wrapper: "bg-white text-gray-600 text-left font-medium text-sm flex-1 mt-4 px-5 rounded-xl shadow-xl h-[340px]",
       table_header_styling: "text-red-500 text-sm bg-white ",
-      table_scroll_behavior: "overflow-y-scroll w-full flex-1 max-h-65",
+      table_scroll_behavior: "overflow-y-scroll w-full flex-1 h-60",
       overflow: "overflow-y-scroll ",
       table_body_styling: {
         row_border: "border border-dashed border-red-500",
@@ -81,7 +81,7 @@ def project_id_ngram_table
     entries:  @ngrams,
     entry_key: "phrase",
     styling: {
-      parent_wrapper: "shadow-md bg-white text-gray-600 text-left font-medium text-sm flex-1",
+      parent_wrapper: " bg-white text-gray-600 text-left font-medium text-sm flex-1 mt-4 px-5 rounded-xl shadow-xl h-[340px]",
       table_header_styling: "text-red-500 text-sm bg-white ",
       table_scroll_behavior: "overflow-y-scroll w-full flex-1 max-h-65",
       overflow: "overflow-y-scroll ",
@@ -105,7 +105,7 @@ end
     columns: [],
     entry_key: "keyword_count",
     styling: {
-      parent_wrapper: "shadow-md bg-zinc-500 row-span-3 col-span-2 text-left font-medium text-white h-auto",
+      parent_wrapper: "bg-zinc-500 row-span-3 col-span-2 text-left font-medium text-white h-300 mt-4 px-5 rounded-xl shadow-xl",
       table_scroll_behavior: "overflow-y-scroll max-h-150",
       table_header_styling: "nil",
 
@@ -127,5 +127,63 @@ end
   end
   def project_columns
     [ "#", "Name", "Insight" ]
+  end
+
+   def glass_red_chart_options
+    {
+      colors: [ "#FF4D4D", "#FFD1D1", "#FF8888", "#FF9999" ], # red accents
+      library: {
+        options: {
+          responsive: true,
+          backgroundColor: "#ffffff",
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: "rgba(255, 255, 255, 0.85)", # glassy
+              borderColor: "rgba(255, 77, 77, 0.3)",
+              borderWidth: 1,
+              titleColor: "#FF4D4D",
+              bodyColor: "#444",
+              titleFont: {
+                size: 14,
+                weight: "600"
+              },
+              bodyFont: {
+                size: 12
+              },
+              cornerRadius: 6,
+              boxPadding: 4
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "rgba(255, 255, 255, 0.9)",
+                font: {
+                  size: 13,
+                  family: "Inter"
+                }
+              },
+              grid: {
+                color: "rgba(255, 255, 255, 0.05)"
+              }
+            },
+            y: {
+              ticks: {
+                color: "rgba(255, 255, 255, 0.8)",
+                font: {
+                  size: 12
+                }
+              },
+              grid: {
+                color: "rgba(255, 255, 255, 0.08)"
+              }
+            }
+          }
+        }
+      }
+    }
   end
 end
