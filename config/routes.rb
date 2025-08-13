@@ -19,12 +19,15 @@ Rails.application.routes.draw do
 
   root "pages#home"
 
+  delete "/logout", to: "sessions#destroy", as: :logout
   post "/search", to: "projects#search"
   post "/search_insights", to: "projects#search_insights"
   post "/search_ngram", to: "projects#search_ngram"
   get "/projects/modal", to: "projects#modal", as: :modal
   get "/projects/export_zip", to: "projects#export_zip_file", as: :export_zip_file
-
+  post "/projects/categories_select", to: "projects#category_select", as: :category_select
+   get "categories", to: "projects#categories"
   resources :projects
   resources :keywords
+  resources :users
 end
