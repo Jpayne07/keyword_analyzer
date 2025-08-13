@@ -7,7 +7,7 @@ module ProjectsHelper
     styling: {
       parent_wrapper: "text-gray-600 row-span-3 col-span-2 text-left font-medium h-auto bg-white mt-4 px-5 rounded-xl shadow-xl",
       table_scroll_behavior: "overflow-y-scroll max-h-67",
-      table_header_styling: "bg-neutral-200",
+      table_header_styling: "bg-neutral-200 text-center",
 
       table_body_styling: {
         row_border: "border border-dashed border-red-500",
@@ -186,4 +186,57 @@ end
       }
     }
   end
+  def glass_red_pie_options
+  {
+    colors: [
+      "#FF4D4D", "#e5b443", "#a1a1aa", "#FFD1D1",
+      "#d9a23a", "#FF8888", "#FF9999", "#f1cb4b"
+    ],
+    library: {
+      type: "pie", # Let Chartkick know the chart type
+      options: {
+        responsive: true,
+        backgroundColor: "#ffffff",
+        plugins: {
+          tooltip: {
+            backgroundColor: "rgba(255, 255, 255, 0.85)",
+            borderColor: "rgba(255, 77, 77, 0.3)",
+            borderWidth: 1,
+            titleColor: "#FF4D4D",
+            bodyColor: "#444",
+            titleFont: {
+              size: 14,
+              weight: "600"
+            },
+            bodyFont: {
+              size: 12
+            },
+            cornerRadius: 6,
+            boxPadding: 4
+          }
+        }
+      },
+      overrides: {
+        pie: {
+          plugins: {
+            legend: {
+              display: true,
+              position: "left",
+              align: "start",
+              labels: {
+                boxWidth: 30,
+                padding: 10,
+                color: "#333",
+                font: {
+                  size: 14,
+                  family: "Inter"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+end
 end

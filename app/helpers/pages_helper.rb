@@ -28,7 +28,7 @@ module PagesHelper
     columns: [ "#", "Title", "Total SV" ],
     entry_key: "name".to_sym,
     styling: {
-      parent_wrapper: "shadow-md bg-white text-gray-600 text-left font-medium text-sm flex-1",
+      parent_wrapper: "text-gray-600 row-span-3 col-span-2 text-left font-medium h-auto bg-white mt-4 px-5 rounded-xl shadow-xl",
       table_scroll_behavior: "overflow-y-scroll w-full flex-1 max-h-65",
       overflow: "overflow-y-scroll ",
       table_header_styling: "bg-neutral-200",
