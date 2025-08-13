@@ -29,10 +29,10 @@ module ExportToZip
 
       Zip::OutputStream.open(temp_file.path) do |zip|
         zip.put_next_entry("All Up.csv")
-        zip.write generate_csv(keywords, [ "ID", "Project ID", "Keyword", "Search Volume", "URL", "Category" ]) { |k| [ k.id, k.project_id, k.name, k.search_volume,  k.url, k.keyword_category ] }
+        zip.write generate_csv(keywords, [ "ID", "Project ID", "Keyword", "Search Volume", "URL", "Category", "Brand" ]) { |k| [ k.id, k.project_id, k.name, k.search_volume,  k.url, k.keyword_category, k.brand ] }
 
         zip.put_next_entry("ngrams.csv")
-        zip.write generate_csv(ngrams_for_export, [ "Phrase", "Frequency" ]) { |ng| [ ng[:phrase], ng[:count] ] }
+        zip.write generate_csv(ngrams_for_export, [ "Phrase", "Frequency", "Brand" ]) { |ng| [ ng[:phrase], ng[:count], ng[:brand] ] }
 
         zip.put_next_entry("keywords.csv")
         zip.write generate_csv(keywords, [ "ID", "Name", "Project ID" ]) { |k| [ k.id, k.name, k.project_id ] }
