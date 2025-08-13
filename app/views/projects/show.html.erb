@@ -1,16 +1,26 @@
-
-
-<div class="flex items-center mt-5 ">
-  <h1 class="text-xl font-semibold pl-10 pr-5 ">Project: </h1>
+<div class="flex items-center gap-4 mx-20 mt-5 px-10 justify-between m-auto border-2 border-red-500 bg-zinc-600">
+  <!-- Project label -->
+  <div class="flex items-center space-x-4 h-[100px]">
+    <h2 class="text-2xl text-white font-semibold">Choose A Project:</h1>
     <%= select_tag :project_id,
       options_from_collection_for_select(@projects, :id, :name),
-      prompt: @project[:name],
-      onchange:  "if(this.value) Turbo.visit('/projects/' + this.value)",
-      class: "text-red-500 text-2xl overflow-y-scroll"%>
+      prompt: @project&.name || "Select a project",
+      onchange: "if(this.value) Turbo.visit('/projects/' + this.value)",
+      class: "bg-zinc-300 text-gray-700 text-base px-3 p-2 rounded border appearance-none" %>
+  </div>
+
+  <!-- Dropdown -->
+ 
+
+  <!-- Delete button -->
+  <div class="col-span-1 flex justify-end">
+    <%= button_to "Delete", project_path(@project),
+      method: :delete,
+      data: { turbo_confirm: "Are you sure?" },
+      class: "bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2 rounded" %>
+  </div>
 </div>
-<hr class="mx-10 border-red-500 border-3">
 <div class="m-10">
-  
 <div class="grid grid-cols-6 gap-5 col-span-9 m-10 content-center">
   <div class=" col-span-2">
     <div class="grid grid-cols-1 gap-5">
@@ -49,7 +59,7 @@
        } %>
       <% end %>
 
-     <%= turbo_frame_tag "category_table" do %>
+     <%= turbo_frame_tag "search_categories_table" do %>
      <%= render partial: "/components/tables/keyword_table", locals: { 
       entries: project_id_category_table[:entries],
       includes: project_id_insights_table[:include], 
@@ -58,7 +68,7 @@
       styling: project_id_category_table[:styling],
       entry_key: project_id_category_table[:entry_key]
       }%>
-    <%end %> 
+    <%end  %>
 
 
     <%= turbo_frame_tag "phrase_table" do %>
@@ -75,44 +85,37 @@
   </div>
   
   <div class="grid grid-rows-4 gap-5">
-    <div class="filter_cards">
+    <div class="bg-gray-200 flex-1 rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center gap-5 mt-5">
       <span class="text-gray-500">Keywords</span>
     <%= form_with url: search_path, html: { class: "text-center" }, method: :post, data: { turbo_frame: "keyword_table" } do %>
     <div class="border-2 border-red-500 text-center rounded-xl align-middle">
-    <%= text_field_tag :query, params[:query], placeholder: "All Keywords", class: "text-center 2xl:w-35 2xl:text-lg md:w-25 md:text-xs mx-2 text-red-500  p-1" %>
+    <%= text_field_tag :query, params[:query], placeholder: "Search", class: "text-center 2xl:w-35 2xl:text-lg md:w-25 md:text-xs mx-2 text-red-500  p-1" %>
     </div>
     <%= hidden_field_tag :project_id, @project.id %>
     <%# <%= submit_tag "Search" %>
     <% end %>
     
     </div>
-        <div class="filter_cards">
+        <div class="bg-gray-200 flex-1 rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center gap-5 mt-5">
         <span class="text-gray-500">URLs</span>
       <%= form_with url: search_insights_path, method: :post, data: { turbo_frame: "search_insights_table" } do %>
         <div class="border-2 border-red-500 text-center rounded-xl align-middle">
-    <%= text_field_tag :query, params[:query], placeholder: "All URLs...",class: "text-center 2xl:w-35 2xl:text-lg md:w-25 md:text-xs mx-2 text-red-500  p-1" %>
+    <%= text_field_tag :query, params[:query], placeholder: "Search",class: "text-center 2xl:w-35 2xl:text-lg md:w-25 md:text-xs mx-2 text-red-500  p-1" %>
     </div>
     <%= hidden_field_tag :project_id, @project.id %>
     <% end %>
     </div>
-        <div class="filter_cards">
-          <span class="text-gray-500">Categories</span>
-      <%= form_with url: search_ngram_path, method: :post do %>
-          <div class="border-2 border-red-500 text-center rounded-xl align-middle">
 
-      <%= text_field_tag :query, params[:query], placeholder: "All Categories...",class: "text-center 2xl:w-35 2xl:text-lg md:w-25 md:text-xs mx-2 text-red-500  p-1" %>
-      </div>
-      <% end %>
-    </div>
-        <div class="filter_cards">
+        <div class="bg-gray-200 flex-1 rounded shadow-[8px_8px_0px_0px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center gap-5 mt-5">
           <span class="text-gray-500">Phrases</span>
       <%= form_with url: search_ngram_path, method: :post do %>
         <div class="border-2 border-red-500 text-center rounded-xl align-middle">
-      <%= text_field_tag :query, params[:query], placeholder: "All Ngrams...",class: "text-center 2xl:w-35 2xl:text-lg md:w-25 md:text-xs mx-2 text-red-500  p-1" %>
+      <%= text_field_tag :query, params[:query], placeholder: "Search",class: "text-center 2xl:w-35 2xl:text-lg md:w-25 md:text-xs mx-2 text-red-500  p-1" %>
       <%= hidden_field_tag :project_id, @project.id %>
       </div>
       <% end %>
     </div>
+    
     <%= form_with url: export_zip_file_path, method: :get, target: "_blank", data: {turbo:"false"} do %>
       <%= hidden_field_tag :project_id, @project.id %>
       <%= submit_tag "Download CSV", class: "btn" %>
