@@ -2,7 +2,6 @@
 module ProjectViewData
   extend ActiveSupport::Concern
   included do
-    before_action :set_project, only: [ :show ]
     before_action :project_id_tables, only: [ :show ]
   end
   private
