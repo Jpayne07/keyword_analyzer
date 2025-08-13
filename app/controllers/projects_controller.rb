@@ -10,6 +10,8 @@ class ProjectsController < ApplicationController
   # include ExportProcessing
   require "csv"
   require "zip"
+  require "benchmark"
+  require "activerecord-import"
 
 
   def project_params
@@ -55,6 +57,16 @@ class ProjectsController < ApplicationController
     @url_list = Keyword.search_insights(params[:query], project_id)
     # respond_to(&:turbo_stream)
   end
+
+  def search_categories
+  session[:category_query] = params[:query]
+  project_id = params[:project_id]
+  @categories = @top_categories
+    .where(project_id: project_id)
+      .search(params[:query], project_id)
+  .limit(10)
+    # respond_to(&:turbo_stream)
+  end
   def search_ngram
     session[:ngram_query] = params[:query]
     project_id = params[:project_id]
@@ -64,6 +76,7 @@ class ProjectsController < ApplicationController
     .order("weighted_frequency DESC")
     # respond_to(&:turbo_stream)
   end
+
   def new
     @project = Project.new
     @project.keywords.build
@@ -72,18 +85,24 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.user = current_user
+
+
     if @project.save
+
       if params[:project][:csv_file].present?
         import_keywords_from_csv(@project, params[:project][:csv_file])
-        @items = url_pattern[1]
+        @items = url_pattern
         render turbo_stream: turbo_stream
         .update("modal",
         partial: "components/modals/category_selection_form",
         locals: { items: @items, key_holder: [] })
-        kw_to_ngram
-
+        if params[:accept_ngram].present?
+              kw_to_ngram
+        end
         return
       end
+
+
 
     respond_to do |format|
       format.html { redirect_to @project }
@@ -92,6 +111,17 @@ class ProjectsController < ApplicationController
       render :new, status: :unprocessable_entity
     end
   end
+
+def categories
+  @project = Project.find(params[:project_id])
+  @items = url_pattern # same method you used in create
+  key_holder = []
+  @items.each { |key, _value| key_holder << key }
+
+  render partial: "components/modals/categories",
+         locals: { key_holder: key_holder, brand: params[:brand] },
+         layout: false
+end
   def edit
   end
   def modal
@@ -99,36 +129,55 @@ class ProjectsController < ApplicationController
     @project.keywords.build
   end
 
- def category_select
-  selected = params[:selected_categories] || []
+def category_select
+  selected = params[:selected_categories] || {}
   project_id = params[:project_id]
   @project = Project.find(project_id)
 
-  return if selected.empty?
-  updated = false
-  # For each keyword, check if its URL includes any selected category string
-  Keyword.where(project_id: project_id).find_each do |kw|
-    matching_categories = selected.select { |cat| kw.url.to_s.downcase.include?(cat.downcase) }
+  return if selected.blank?
 
-    # Return early if no matches
-    next if matching_categories.empty?
+  category_volumes = Keyword
+    .where(project_id: project_id)
+    .group(:keyword_category)
+    .sum(:search_volume)
 
-    # Find the highest-volume match
-    best_category = matching_categories.max_by do |cat|
-      Keyword
-        .where(project_id: project_id, keyword_category: cat)
-        .sum(:search_volume)
+  updated_keywords = []
+
+  Keyword.where(project_id: project_id).find_in_batches(batch_size: 500) do |batch|
+    batch.each do |kw|
+      clean_url = kw.url.to_s.downcase
+      first_folder = clean_url[%r{\.\w+\/([^\/]+)}, 1]&.tr("-", " ")
+
+      next if first_folder.nil?
+
+      selected.each do |_brand, categories|
+        categories.each do |cat|
+          next unless first_folder.include?(cat.downcase)
+
+          best_category = categories.max_by { |c| category_volumes[c] || 0 }
+          next if best_category.nil? || kw.keyword_category == best_category
+
+          kw.keyword_category = best_category
+          updated_keywords << kw
+        end
+      end
     end
 
-    kw.update(keyword_category: best_category)
+    if updated_keywords.any?
+      Keyword.import(
+        updated_keywords,
+        on_duplicate_key_update: {
+          conflict_target: [ :id ],
+          columns: [ :keyword_category ]
+        }
+      )
+      updated_keywords.clear
+    end
   end
-  if updated
-    flash[:notice] = "Categories applied to matching URLs, redirected to new project."
-  else
-    flash[:alert] = "No matches found for selected categories"
-  end
+
   redirect_to project_path(project_id), notice: "Categories applied to matching URLs"
 end
+
   def update
     if @project.update(project_params)
       redirect_to @project
@@ -141,11 +190,9 @@ end
       redirect_to projects_path
   end
   private
-    def project_params
-      params.expect(project: [ :name, :user_id ])
-      params.require(:project).permit(:name)
-    end
+
     def set_project
     @project = current_user.projects.find(params[:id])
+    puts "setting project! #{@project}"
     end
 end
