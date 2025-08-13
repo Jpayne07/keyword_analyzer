@@ -1,0 +1,23 @@
+<%= turbo_frame_tag "categories" do %>
+<% selected_brand = (brand || params[:brand] || key_holder.flat_map(&:keys).first) %>
+<% entry = key_holder.find { |h| h.key?(selected_brand) } %>
+<% categories = entry ? entry[selected_brand] : {} %>
+<div data-controller="cat"
+     data-cat-brand-value="<%= selected_brand %>">
+<h3 class="text-white font-bold my-2"><%= selected_brand %></h3>
+
+  <% categories.each do |name, data| %>
+    <label class="category-checkbox flex items-center my-3 p-3 bg-white/10 rounded-lg hover:bg-white/20 cursor-pointer text-white">
+      <%= check_box_tag nil, nil, false,
+            data: {
+              cat_target: "box",
+              action: "change->cat#toggle",
+              name: name
+            },
+            id: "category_#{name.parameterize}" %>
+      <span><%= name.humanize %></span>
+      <small class="ml-2 text-gray-400">(<%= data[:count] %>)</small>
+    </label>
+  <% end %>
+</div>
+<% end %>
