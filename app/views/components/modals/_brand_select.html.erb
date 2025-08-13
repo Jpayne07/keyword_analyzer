@@ -1,0 +1,6 @@
+<div class="my-2">
+  <%= select_tag :brand,
+        options_for_select(brands, params[:brand] || brands.first),
+        onchange: "this.form.requestSubmit()",
+        class: "bg-white/10 text-red rounded p-2 w-full" %>
+</div>
