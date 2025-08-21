@@ -37,7 +37,7 @@ module ProjectsHelper
         row_border: "border border-dashed border-red-500",
         index_styling: "border-x border-dashed border-red-500 p-0.5 px-1 text-center h-5 w-4",
         name_styling: "p-0.5 px-1 max-w-40 overflow-hidden truncate whitespace-nowrap flex-1",
-        keyword_styling: "p-.5 px-1 w-4 overflow-hidden truncate whitespace-nowrap"
+        keyword_styling: "px-5 px-1 w-4 overflow-hidden truncate whitespace-nowrap"
       }
     },
 
@@ -63,7 +63,7 @@ module ProjectsHelper
         row_border: "border border-dashed border-red-500",
         index_styling: "border-x border-dashed border-red-500 p-0.5 px-1 text-center h-5 w-4",
         name_styling: "p-0.5 px-1 max-w-40 overflow-hidden truncate whitespace-nowrap flex-1",
-        keyword_styling: "p-.5 px-1 w-4 overflow-hidden truncate whitespace-nowrap"
+        keyword_styling: "px-5 px-1 w-4 overflow-hidden truncate whitespace-nowrap "
       }
     },
     table_primary_field: "url"
@@ -89,7 +89,7 @@ def project_id_ngram_table
         row_border: "border border-dashed border-red-500",
         index_styling: "border-x border-dashed border-red-500 p-0.5 px-1 text-center h-5 w-4",
         name_styling: "p-0.5 px-1 max-w-40 overflow-hidden truncate whitespace-nowrap flex-1",
-        keyword_styling: "p-.5 px-1 w-4 overflow-hidden truncate whitespace-nowrap"
+        keyword_styling: "px-5 px-1 w-4 overflow-hidden truncate whitespace-nowrap"
       }
     },
     table_primary_field: "url",
@@ -113,7 +113,7 @@ end
         row_border: "border border-dashed border-red-500",
         index_styling: "border-x border-dashed border-red-500 p-0.5 px-1 text-center w-2",
         name_styling: " px-1 max-w-20 overflow-hidden truncate whitespace-nowrap text-ellipsis",
-        keyword_styling: " px-1 w-5 overflow-hidden truncate whitespace-nowrap text-ellipsis "
+        keyword_styling: " px-5 w-5 overflow-hidden truncate whitespace-nowrap text-ellipsis "
       }
 
     },
@@ -129,63 +129,51 @@ end
     [ "#", "Name", "Insight" ]
   end
 
-   def glass_red_chart_options
-    {
-      colors: [ "#FF4D4D", "#FFD1D1", "#FF8888", "#FF9999" ], # red accents
-      library: {
-        options: {
-          responsive: true,
-          backgroundColor: "#ffffff",
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              backgroundColor: "rgba(255, 255, 255, 0.85)", # glassy
-              borderColor: "rgba(255, 77, 77, 0.3)",
-              borderWidth: 1,
-              titleColor: "#FF4D4D",
-              bodyColor: "#444",
-              titleFont: {
-                size: 14,
-                weight: "600"
-              },
-              bodyFont: {
-                size: 12
-              },
-              cornerRadius: 6,
-              boxPadding: 4
-            }
+  def glass_red_chart_options
+  {
+    colors: [ "#FF4D4D", "#FFD1D1", "#FF8888", "#FF9999" ],
+    library: {
+      # this is Chart.js "options" (no extra :options wrapper)
+      responsive: true,
+      backgroundColor: "rgba(255,255,255,0.4)", # slightly glassy
+      plugins: {
+        legend: {
+          display: false
+          # If you later enable legend and want spacing:
+          # labels: { boxPadding: 4 }
+        },
+        tooltip: {
+          backgroundColor: "rgba(255, 255, 255, 0.85)",
+          borderColor: "rgba(255, 77, 77, 0.3)",
+          borderWidth: 1,
+          titleColor: "#FF4D4D",
+          bodyColor: "#444",
+          titleFont: { size: 20, weight: "400" },
+          bodyFont: { size: 16 },
+          cornerRadius: 6,
+          padding: 8
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: "rgba(255, 255, 255, 0.9)",
+            font: { size: 16, family: "Inter" }
           },
-          scales: {
-            x: {
-              ticks: {
-                color: "rgba(255, 255, 255, 0.9)",
-                font: {
-                  size: 13,
-                  family: "Inter"
-                }
-              },
-              grid: {
-                color: "rgba(255, 255, 255, 0.05)"
-              }
-            },
-            y: {
-              ticks: {
-                color: "rgba(255, 255, 255, 0.8)",
-                font: {
-                  size: 12
-                }
-              },
-              grid: {
-                color: "rgba(255, 255, 255, 0.08)"
-              }
-            }
-          }
+          grid: { color: "rgba(255, 255, 255, 0.05)" }
+        },
+        y: {
+          ticks: {
+            color: "rgba(255, 255, 255, 0.8)",
+            font: { size: 16 }
+          },
+          grid: { color: "rgba(255, 255, 255, 0.08)" }
         }
       }
     }
+  }
   end
+
   def glass_red_pie_options
   {
     colors: [

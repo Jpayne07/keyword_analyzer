@@ -10,7 +10,15 @@
 
     </div>
     <%# begin table %>
-    <div class="grid grid-cols-5 gap-4 col-span-9 m-10 content-center">
+    <div class="grid grid-cols-6 gap-4 col-span-9 content-center">
+      <div class="col-span-2"> 
+         <%= render partial: "/components/tables/keyword_table", locals: { 
+        entries: @projects, 
+        current_page: @current_page, 
+        table_config: home_projects_table,
+        styling: home_projects_table[:styling],
+        entry_key: home_projects_table[:entry_key]
+       } %>
         <%= render partial: "/components/tables/keyword_table", locals: { 
         entries: @keywords, 
         current_page: @current_page, 
@@ -18,17 +26,20 @@
         styling: project_id_kw_table[:styling],
         entry_key: project_id_kw_table[:entry_key]
        } %>
-        <div class="col-span-3">
        <!--  render partial: "/components/tables/keyword_table", locals: { entries: @keywords, kw_columns: @kw_columns, current_page: @current_page, total_pages: @total_project_pages, styling: home_projects_table[:styling]} %>
         < render partial: "/components/tables/keyword_table", locals: { entries: @projectsInsights, current_page: @current_page, total_pages: @total_project_pages, styling: home_projects_table[:styling]} %>-->
-      <%= render partial: "/components/tables/keyword_table", locals: { 
-        entries: @projects, 
-        current_page: @current_page, 
-        table_config: home_projects_table,
-        styling: home_projects_table[:styling],
-        entry_key: home_projects_table[:entry_key]
-       } %>
+     
+      </div>
+      <div class="col-span-2">
+        <div class="mt-4 p-5 rounded-xl shadow-xl bg-white backdrop-blur-sm border border-white/20">
+          <%= pie_chart @keywords.group(:keyword_category).count, height: "300px", **glass_red_pie_options, title: "Categories", ytitle: "KW Count" %>
         </div>
+      </div>
+      <div class="col-span-2">
+        <div class="mt-4 p-5 rounded-xl shadow-xl bg-white backdrop-blur-sm border border-white/20">
+          <%= column_chart @keywords.group(:keyword_category).count, height: "300px", **glass_red_chart_options, title: "Categories", ytitle: "KW Count" %>
+        </div>
+      </div>
         
     </div>
     

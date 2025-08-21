@@ -4,6 +4,7 @@ class Keyword < ApplicationRecord
   validates :name, presence: true
   validates :search_volume, presence: true
   validates :url, presence: true
+  validates :brand, presence: true
   require "csv"
 
 
@@ -33,9 +34,9 @@ class Keyword < ApplicationRecord
 
     def self.to_csv(keyword)
     CSV.generate(headers: true) do |csv|
-      csv << [ "Name", "URL", "Search Volume", "Estimated Traffic" ] # headers
+      csv << [ "Name", "URL", "Search Volume", "Estimated Traffic", "Brand" ] # headers
       keyword.each do |k|
-        csv << [ k.name, k.url, k.search_volume, k.estimated_traffic ]
+        csv << [ k.name, k.url, k.search_volume, k.estimated_traffic, k.brand ]
       end
     end
     end

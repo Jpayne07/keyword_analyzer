@@ -6,12 +6,12 @@
         ☰ Menu
       </button>
        <ul class="hidden md:flex gap-6 text-base xl:text-lg  align-middle" >
-        <%= link_to "DASHBOARD", root_path, class:"py-2" %>
-        <%= link_to "PROJECTS", projects_path, class:"py-2" %>
+        <%= link_to "HUB", root_path, class:"py-2" %>
+        <%# <%= link_to "PROJECTS", projects_path, class:"py-2" %>
         <%# <%= link_to "KEYWORDS", keywords_path, class:"py-2" %> 
         <%# <p>PROFILE</p> %>
         <%= button_to "LOGOUT", logout_path, class:"rounded bg-white text-red-500 px-5 py-2", method: :delete if authenticated? %>
-      </ul>
+        </ul>
 
       </div>
        <nav id="mobile-menu" class="hidden md:hidden m-2 space-y-2 text-xl

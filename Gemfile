@@ -67,3 +67,7 @@ gem "tailwindcss-rails", "~> 4.2"
 gem "tailwindcss-ruby", "~> 4.1"
 
 gem "faker"
+gem "groupdate"
+gem "chartkick"
+gem "chart-js-rails"
+gem "activerecord-import"

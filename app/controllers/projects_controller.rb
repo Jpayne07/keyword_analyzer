@@ -90,6 +90,8 @@ class ProjectsController < ApplicationController
     if @project.save
 
       if params[:project][:csv_file].present?
+
+
         import_keywords_from_csv(@project, params[:project][:csv_file])
         @items = url_pattern
         render turbo_stream: turbo_stream
@@ -144,6 +146,7 @@ def category_select
   updated_keywords = []
 
   Keyword.where(project_id: project_id).find_in_batches(batch_size: 500) do |batch|
+    sleep(0.1)
     batch.each do |kw|
       clean_url = kw.url.to_s.downcase
       first_folder = clean_url[%r{\.\w+\/([^\/]+)}, 1]&.tr("-", " ")
@@ -152,13 +155,15 @@ def category_select
 
       selected.each do |_brand, categories|
         categories.each do |cat|
-          next unless first_folder.include?(cat.downcase)
-
-          best_category = categories.max_by { |c| category_volumes[c] || 0 }
-          next if best_category.nil? || kw.keyword_category == best_category
-
-          kw.keyword_category = best_category
-          updated_keywords << kw
+          if first_folder.include?(cat.downcase)
+            best_category = categories.max_by { |c| category_volumes[c] || 0 }
+            next if best_category.nil? || kw.keyword_category == best_category
+            kw.keyword_category = best_category
+            updated_keywords << kw
+          else
+            kw.keyword_category = "(blank)"
+            updated_keywords << kw
+          end
         end
       end
     end
@@ -186,6 +191,10 @@ end
     end
   end
   def destroy
+      @project.keywords.in_batches(of: 1000) do |batch|
+        batch.delete_all
+        sleep(0.1)
+      end
       @project.destroy
       redirect_to projects_path
   end

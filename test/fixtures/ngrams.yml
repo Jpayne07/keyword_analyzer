@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  phrase: MyString
+  project: one
+  weighted_frequency: MyString
+  integer: MyString
+
+two:
+  phrase: MyString
+  project: two
+  weighted_frequency: MyString
+  integer: MyString
