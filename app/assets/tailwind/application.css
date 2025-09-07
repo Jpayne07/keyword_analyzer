@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "/home/jacob/development/code/portfolio/keyword_analyzer/app/assets/stylesheets/tables.css";
 
 @layer components {
   .keyword_table {
