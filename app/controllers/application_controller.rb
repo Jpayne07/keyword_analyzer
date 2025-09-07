@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     @current_user ||= Current.session&.user
   end
   def after_authentication_url
-    root_path # Use the path helper for your dashboard
+    root_path
   end
   private
     def require_login
@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
           redirect_to new_session_path # halts request cycle
         end
     end
-def log_params
+  def log_params
     Rails.logger.error ">>> #{controller_name}##{action_name} params: #{params.to_unsafe_h}"
   end
 
