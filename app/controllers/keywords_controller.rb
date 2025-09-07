@@ -3,7 +3,7 @@ class KeywordsController < ApplicationController
     @keywords = Keyword.all.limit(10)
   end
   def create
-  @keyword = Keyword.new(keyword_params)
+    @keyword = Keyword.new(keyword_params)
     if @keyword.save
       redirect_to @keyword.project, notice: "Keyword created successfully"
     else

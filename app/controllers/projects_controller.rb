@@ -1,4 +1,5 @@
 class ProjectsController < ApplicationController
+  before_action :log_params
   before_action :set_project, only: %i[ show edit update destroy ]
   include Paginatable
   include ProjectViewData
@@ -12,7 +13,9 @@ class ProjectsController < ApplicationController
   require "zip"
   require "benchmark"
   require "activerecord-import"
-
+def log_params
+    Rails.logger.debug ">>> #{controller_name}##{action_name} params: #{params.to_unsafe_h}"
+end
 
   def project_params
   params.require(:project).permit(
@@ -85,14 +88,15 @@ class ProjectsController < ApplicationController
   def create
     @project = Project.new(project_params)
     @project.user = current_user
-
-
     if @project.save
-
       if params[:project][:csv_file].present?
-
-
+        begin
         import_keywords_from_csv(@project, params[:project][:csv_file])
+        rescue BadHeaders => e
+          @project.delete
+          @project.errors.add(:base, e.message)
+          render :new, status: :unprocessable_entity and return
+        end
         @items = url_pattern
         render turbo_stream: turbo_stream
         .update("modal",
@@ -103,9 +107,6 @@ class ProjectsController < ApplicationController
         end
         return
       end
-
-
-
     respond_to do |format|
       format.html { redirect_to @project }
     end
@@ -116,7 +117,7 @@ class ProjectsController < ApplicationController
 
 def categories
   @project = Project.find(params[:project_id])
-  @items = url_pattern # same method you used in create
+  @items = url_pattern
   key_holder = []
   @items.each { |key, _value| key_holder << key }
 
