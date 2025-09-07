@@ -12,13 +12,14 @@ User.create(email_address: "jpayne7@yahoo.com", password: "password")
 3.times do |i|
   Project.create!(
     name: "Project #{i + 1}",
-    user_id: 1  # Make sure user_id: 1 exists or change this
+    user_id: 1
   )
+  i+=1
 end
   3.times do |i|
   Project.create!(
-    name: "Project #{3 + i}",
-    user_id: 2  # Make sure user_id: 1 exists or change this
+    name: "Projects #{i + 3}",
+    user_id: 2
   )
 end
 
