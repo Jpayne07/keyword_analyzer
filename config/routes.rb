@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get "ngram/search"
   get "project_issues/index"
   # get "pages/home"
-  resource :session
+  resource :session, only: [ :new, :create, :destroy ]
   resources :passwords, param: :token
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  root "pages#home"
+
 
   delete "/logout", to: "sessions#destroy", as: :logout
   post "/search", to: "projects#search"
@@ -30,4 +30,5 @@ Rails.application.routes.draw do
   resources :projects
   resources :keywords
   resources :users
+  root "pages#home"
 end
