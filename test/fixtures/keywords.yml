@@ -1,9 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  keyword: MyString
+  name: MyString
   project: one
+  brand: test_brand
+  url: "test.com"
+  search_volume: 400,000,000
+  estimated_traffic: 20900
 
 two:
-  keyword: MyString
+  name: MyString
   project: two

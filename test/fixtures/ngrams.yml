@@ -4,10 +4,10 @@ one:
   phrase: MyString
   project: one
   weighted_frequency: MyString
-  integer: MyString
+  # integer: MyString
 
 two:
   phrase: MyString
   project: two
   weighted_frequency: MyString
-  integer: MyString
+  # integer: MyString
