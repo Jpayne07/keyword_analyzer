@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_04_114922) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_26_025951) do
   create_table "keywords", force: :cascade do |t|
     t.string "name"
     t.integer "project_id", null: false
@@ -33,16 +33,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_04_114922) do
     t.integer "count"
     t.string "brand"
     t.index ["project_id"], name: "index_ngrams_on_project_id"
-  end
-
-  create_table "project_issues", force: :cascade do |t|
-    t.string "name"
-    t.string "description"
-    t.integer "project_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "user_id"
-    t.index ["project_id"], name: "index_project_issues_on_project_id"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -72,7 +62,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_04_114922) do
 
   add_foreign_key "keywords", "projects"
   add_foreign_key "ngrams", "projects"
-  add_foreign_key "project_issues", "projects"
   add_foreign_key "projects", "users"
   add_foreign_key "sessions", "users"
 end
