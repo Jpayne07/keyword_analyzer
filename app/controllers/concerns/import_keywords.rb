@@ -34,7 +34,7 @@ module ImportKeywords
     end
     keywords = []
       csv = CSV.parse(params[:project][:csv_file].read, headers: true, header_converters: normalizer)
-      expected_headers = [ "Keyword", "Email", "Age" ]
+      expected_headers = [ "Keyword", "Search Volume", "Brand" ]
       unless csv.headers == expected_headers
        raise BadHeaders, "CSV headers mismatch. Expected: #{expected_headers.join(', ')}"
       end
