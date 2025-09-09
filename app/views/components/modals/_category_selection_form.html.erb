@@ -35,17 +35,16 @@
 </div>
 <div class="space-y-3 max-h-64 overflow-y-auto">
     <%= form_with url: categories_path, method: :get, data: { turbo_frame: "categories" } do %>
+      <label class="block text-white mb-1">Select Brand</label>
       <%= hidden_field_tag :project_id, @project.id %>
       <%= render partial: "components/modals/brand_select", locals: { brands: key_holder.map(&:keys).flatten } %>
     <% end %>
-  <%= form_with url: category_select_path, method: :post, data: { turbo: false } do |form| %>
-    
-    <label class="block text-white mb-1">Select Brand</label>
-  <div id="selected-store"></div>
-  <%= turbo_frame_tag "categories" do %>
-  <%= render partial: "components/modals/categories", 
-             locals: { key_holder: key_holder, brand: params[:brand] } %>
-<% end %>
+
+    <%= form_with url: category_select_path, method: :post, data: { turbo: false } do |form| %>
+      <div id="selected-store"></div>
+    <%= turbo_frame_tag "categories" do %>
+    <%= render partial: "components/modals/categories", locals: { key_holder: key_holder, brand: params[:brand] } %>
+    <% end %>
 
     <%= hidden_field_tag :project_id, @project.id %>
     <div class="flex justify-center items-center h-full">
