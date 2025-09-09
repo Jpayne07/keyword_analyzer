@@ -48,9 +48,7 @@ module PhraseParser
 
 def url_pattern
   brands = Keyword.where(project_id: @project.id).pluck(:brand).uniq
-
   brand_category = []
-
   brands.each do |brand|
     kw_holder = Hash.new { |hash, key| hash[key] = { count: 0 } }
     all_urls = Keyword.where(brand: brand).pluck(:url).uniq

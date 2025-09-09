@@ -15,9 +15,7 @@ module ImportKeywords
     content = file.read.force_encoding("UTF-8")
     content = content.sub("\xEF\xBB\xBF", "").gsub("\r", "").strip
     row_count = CSV.parse(content, headers: true).size
-      # Reset pointer so we can re-read later
       file.rewind
-      # Check project keyword limit (100k total for that project)
       if @project.keywords.count + row_count > 100000
         @project.errors.add(:base, "This upload would exceed the 100,000 keyword limit for a single project.")
         return render :new, status: :unprocessable_entity
@@ -26,16 +24,17 @@ module ImportKeywords
       case field.downcase
       when "volume", "search volume"
         "search_volume"
-      when "name"
-        "client_name"
       else
         field.downcase
       end
     end
     keywords = []
-      csv = CSV.parse(params[:project][:csv_file].read, headers: true, header_converters: normalizer)
-      expected_headers = [ "Keyword", "Search Volume", "Brand" ]
-      unless csv.headers == expected_headers
+      csv = CSV.parse(content, headers: true, header_converters: normalizer)
+      file.rewind
+      expected_headers = [ "keyword", "search_volume", "brand", "url", "est_traffic" ]
+      normalized_csv_headers = csv.headers.map { |h| h.to_s.encode("UTF-8").strip.downcase.sub(/\A\uFEFF/, "") }.uniq
+      normalized_expected    = expected_headers.map { |h| h.to_s.encode("UTF-8").strip.downcase }
+      unless normalized_csv_headers.sort == normalized_expected.sort
        raise BadHeaders, "CSV headers mismatch. Expected: #{expected_headers.join(', ')}"
       end
 
@@ -53,7 +52,6 @@ module ImportKeywords
           brand: row["brand"],
         )
       end
-
       Keyword.import(keywords, validate: true)
     end
   end
