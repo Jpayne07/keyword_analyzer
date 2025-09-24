@@ -1,11 +1,13 @@
-require "test_helper"
-require_relative "session_creation_helper"
+# frozen_string_literal: true
+
+require 'test_helper'
+require_relative 'session_creation_helper'
 
 class LoginFlowTest < ActionDispatch::IntegrationTest
   setup do
-    sign_in_as(users(:one).email_address, "password")
+    sign_in_as(users(:one).email_address, 'password')
   end
-  test "User can log in and redirects to home" do
+  test 'User can log in and redirects to home' do
     assert_redirected_to root_path
     follow_redirect!
   end
