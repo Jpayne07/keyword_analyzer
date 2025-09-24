@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Project < ApplicationRecord
   belongs_to :user
   has_many :keywords, dependent: :destroy
@@ -6,13 +8,13 @@ class Project < ApplicationRecord
   validate :projects_count_within_limit, on: :create
   accepts_nested_attributes_for :keywords, allow_destroy: true
   before_destroy :destroy_keywords_in_batches
-  @project_limit=5
+  PROJECT_LIMIT = 5
 
   def projects_count_within_limit
-    if user.projects.reload.count >= 100
-    errors.add(:base, "Exceeded projects limit")
-    print errors.full_messages
-    end
+    return unless user.projects.reload.count >= PROJECT_LIMIT
+
+    errors.add(:base, 'Exceeded projects limit')
+    Rails.logger.debug errors.full_messages
   end
 
   def destroy_keywords_in_batches

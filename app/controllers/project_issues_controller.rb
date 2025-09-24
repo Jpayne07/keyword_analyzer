@@ -1,4 +1,5 @@
+# frozen_string_literal: true
+
 class ProjectIssuesController < ApplicationController
-  def index
-  end
+  def index; end
 end

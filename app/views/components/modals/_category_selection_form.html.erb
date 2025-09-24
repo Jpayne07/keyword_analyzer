@@ -1,8 +1,4 @@
 <div id="overlay"></div>
-<% @items.each do |key, value| %>
-  <%key_holder << key %>
-<% end %>
-
 <div class="modal bg-red-600 rounded-2xl shadow-2xl max-w-md w-full mx-auto modal-enter">
   <div class="flex items-center justify-between p-3 border-b border-red-400">
     <div class="w-full">
@@ -42,15 +38,15 @@
 
     <%= form_with url: category_select_path, method: :post, data: { turbo: false } do |form| %>
       <div id="selected-store"></div>
-    <%= turbo_frame_tag "categories" do %>
-    <%= render partial: "components/modals/categories", locals: { key_holder: key_holder, brand: params[:brand] } %>
-    <% end %>
+       <%= turbo_frame_tag "categories" do %>
+        <%= render partial: "components/modals/categories", locals: { key_holder: key_holder, brand: params[:brand] } %>
+       <% end %>
 
-    <%= hidden_field_tag :project_id, @project.id %>
-    <div class="flex justify-center items-center h-full">
+      <%= hidden_field_tag :project_id, @project.id %>
+      <div class="flex justify-center items-center h-full">
       <%= form.submit "Save Selected Categories", class: "text-red-500 bg-white p-3 my-3 rounded-lg w-90 cursor-pointer" %>
-    </div>
-  <% end %>
+      </div>
+    <% end %>
 </div>
   </div>
 </div>

@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module Paginatable
   extend ActiveSupport::Concern
 
-  def current_page(per_page = 10)
+  def current_page(_per_page = 10)
     params.fetch(:page, 1).to_i
   end
 

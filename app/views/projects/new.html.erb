@@ -13,12 +13,12 @@
 
   <div class="mb-4">
     <%= form.label :name, class: "block text-sm font-medium text-gray-700 mb-1"  %>
-    <%= form.text_field :name, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" %>
+    <%= form.text_field :name, required: true, class: "w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" %>
   </div>
   </div>
   <div class="mb-6">
-    <%= form.label :csv_file, "Upload CSV", class: "block text-sm font-medium text-gray-700 mb-1" %>
-    <%= form.file_field :csv_file, accept: ".csv", class: "w-full border border-gray-300 rounded px-3 py-2 bg-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-red-700 file:text-white hover:file:bg-red-700" %>
+<%= form.label :csv_file, "Upload CSV", class: "block text-sm font-medium text-gray-700 mb-1" %>
+    <%= form.file_field :csv_file, accept: ".csv", required: true, class: "w-full border border-gray-300 rounded px-3 py-2 bg-white file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-red-700 file:text-white hover:file:bg-red-700" %>
   </div>
   <%= check_box_tag 'accept_ngram'%>
   <%= label_tag('accept ngram',  "Process Ngram (Takes Longer)") %>
