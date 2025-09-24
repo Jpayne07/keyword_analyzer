@@ -1,55 +1,69 @@
+# frozen_string_literal: true
+
 module ImportKeywords
   extend ActiveSupport::Concern
-  require "activerecord-import"
-   class BadHeaders < StandardError
-  attr_reader :error_code, :user_message
-    def initialize(msg = "Headers are not set", error_code = 422, user_message = nil)
+  require 'activerecord-import'
+  class BadHeaders < StandardError
+    attr_reader :error_code, :user_message
+
+    def initialize(msg = 'Headers are not set', error_code = 422, user_message = nil)
       @error_code = error_code
       @user_message = user_message
       super(msg)
     end
-   end
+  end
+
+  class UploadLimit < StandardError
+    attr_reader :error_code, :user_message
+
+    def initialize(msg = 'Upload file is too large', error_code = 422, user_message = nil)
+      @error_code = error_code
+      @user_message = user_message
+      super(msg)
+    end
+  end
 
   def import_keywords_from_csv(project, file)
-    require "csv"
-    content = file.read.force_encoding("UTF-8")
-    content = content.sub("\xEF\xBB\xBF", "").gsub("\r", "").strip
+    require 'csv'
+    content = file.read.force_encoding('UTF-8')
+    content = content.sub("\xEF\xBB\xBF", '').gsub("\r", '').strip
     row_count = CSV.parse(content, headers: true).size
-      file.rewind
-      if @project.keywords.count + row_count > 100000
-        @project.errors.add(:base, "This upload would exceed the 100,000 keyword limit for a single project.")
-        return render :new, status: :unprocessable_entity
-      end
-      normalizer = proc do |field|
+    file.rewind
+    if @project.keywords.count + row_count > 100_000
+      raise UploadLimit,
+            'File is too large. Expected less than 100k rows'
+    end
+
+    normalizer = proc do |field|
       case field.downcase
-      when "volume", "search volume"
-        "search_volume"
+      when 'volume', 'search volume'
+        'search_volume'
       else
         field.downcase
       end
     end
     keywords = []
-      csv = CSV.parse(content, headers: true, header_converters: normalizer)
-      file.rewind
-      expected_headers = [ "keyword", "search_volume", "brand", "url", "est_traffic" ]
-      normalized_csv_headers = csv.headers.map { |h| h.to_s.encode("UTF-8").strip.downcase.sub(/\A\uFEFF/, "") }.uniq
-      normalized_expected    = expected_headers.map { |h| h.to_s.encode("UTF-8").strip.downcase }
-      unless normalized_csv_headers.sort == normalized_expected.sort
-       raise BadHeaders, "CSV headers mismatch. Expected: #{expected_headers.join(', ')}"
-      end
+    csv = CSV.parse(content, headers: true, header_converters: normalizer)
+    file.rewind
+    expected_headers = %w[keyword search_volume brand url est_traffic]
+    normalized_csv_headers = csv.headers.map { |h| h.to_s.encode('UTF-8').strip.downcase.sub(/\A\uFEFF/, '') }.uniq
+    normalized_expected    = expected_headers.map { |h| h.to_s.encode('UTF-8').strip.downcase }
+    unless normalized_csv_headers.sort == normalized_expected.sort
+      raise BadHeaders, "CSV headers mismatch. Expected: #{expected_headers.join(', ')}"
+    end
 
     csv.each_slice(500) do |rows|
       sleep(0.1)
       keywords = rows.map do |row|
         row = row.to_h.transform_keys(&:strip)
         Keyword.new(
-          url: row["url"],
-          name: row["keyword"],
-          search_volume: row["search_volume"],
-          estimated_traffic: row["est_traffic"],
-          keyword_category: row["keyword_category"],
+          url: row['url'],
+          name: row['keyword'],
+          search_volume: row['search_volume'],
+          estimated_traffic: row['est_traffic'],
+          keyword_category: row['keyword_category'],
           project_id: project.id,
-          brand: row["brand"],
+          brand: row['brand']
         )
       end
       Keyword.import(keywords, validate: true)
