@@ -3,6 +3,7 @@
 require 'test_helper'
 
 class ProjectTest < ActiveSupport::TestCase
+  # setting max keywords, 1 keyword is already instantiated from fixtures
   Keyword::MAX_KEYWORDS_PER_USER = 5
   test 'project creation limits' do
     10.times do
@@ -12,6 +13,7 @@ class ProjectTest < ActiveSupport::TestCase
   end
 
   test 'project cannot have more than 100,000 kws' do
+    # from fixtures 1+4 (below)
     Keyword.transaction do
       4.times do
         Keyword.create!(
@@ -30,7 +32,7 @@ class ProjectTest < ActiveSupport::TestCase
       search_volume: 100,
       project_id: projects(:one).id
     )
-
+    # testing it does not save because there are 5 from above
     assert_not kw.save
   end
 end

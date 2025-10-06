@@ -3,13 +3,15 @@
 require 'test_helper'
 
 class KeywordTest < ActiveSupport::TestCase
+  # testing keywords, setting 5 max limit here
   Keyword::MAX_KEYWORDS_PER_USER = 5
   test 'Keyword is not longer than 50 chars' do
+    # if it's stupid and it works it's not stupid
     keywords(:one).name = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
     print(keywords(:one).name.size)
     assert_not keywords(:one).save
   end
-
+  # same as in project creation, 1 from fixture, 4 from here
   test 'user cannot have more than 150,000 kws' do
     Keyword.transaction do
       4.times do
