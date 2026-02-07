@@ -7,7 +7,7 @@ Rails.application.configure do
 
   # Make code changes take effect immediately without server restart.
   config.enable_reloading = true
-  # config.log_level = :warn
+  config.log_level = :debug
   # Do not eager load code on boot.
   config.eager_load = false
 

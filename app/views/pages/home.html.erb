@@ -31,13 +31,13 @@
      
       </div>
       <div class="col-span-2">
-        <div class="mt-4 p-5 rounded-xl shadow-xl bg-white backdrop-blur-sm border border-white/20">
+        <div class="mt-4 p-5 rounded-sm shadow-xl bg-white backdrop-blur-sm border border-white/20">
           <%= pie_chart @keywords.group(:keyword_category).count, height: "300px", **glass_red_pie_options, title: "Categories", ytitle: "KW Count" %>
         </div>
       </div>
       <div class="col-span-2">
-        <div class="mt-4 p-5 rounded-xl shadow-xl bg-white backdrop-blur-sm border border-white/20">
-          <%= column_chart @keywords.group(:keyword_category).count, height: "300px", **glass_red_chart_options, title: "Categories", ytitle: "KW Count" %>
+        <div class="mt-4 p-5 rounded-sm shadow-xl bg-white backdrop-blur-sm border border-white/20">
+          <%= column_chart @keywords_limited, height: "300px", **glass_red_chart_options, title: "Categories", ytitle: "KW Count" %>
         </div>
       </div>
         

@@ -62,9 +62,47 @@ class Keyword < ApplicationRecord
     end
   end
 
+  def self.push_categories_into_keywords(project_id, selected)
+    keyword_holder = []
+    Keyword.where(project_id: project_id).find_in_batches(batch_size: 500) do |batch|
+      sleep(0.1)
+      batch.each do |kw|
+        first_folder = extract_first_folder(kw.url)
+
+        match_selected_with_url(kw, selected, keyword_holder, first_folder)
+      end
+      push_keywords(keyword_holder)
+    end
+  end
+
+  def process(keyword)
+    extract_first_folder(keyword.url)
+  end
+
+  def self.match_selected_with_url(updated_keywords, first_folder)
+    selected.each do |brand, categories|
+      next unless brand == keyword.brand
+
+      find_first_category(categories, updated_keywords, first_folder)
+    end
+  end
+
+  def self.push_keywords(updated_keywords)
+    return unless updated_keywords.any?
+
+    Keyword.import(
+      updated_keywords,
+      on_duplicate_key_update: {
+        conflict_target: [:id],
+        columns: [:keyword_category]
+      }
+    )
+    updated_keywords.clear
+  end
+
   private
 
   def normalize_category
-    self.keyword_category = '(Blank)' if keyword_category.nil?
+    self.keyword_category = '(blank)' if keyword_category.nil?
   end
 end

@@ -161,42 +161,43 @@ class ProjectsController < ApplicationController
                        .group(:keyword_category)
                        .sum(:search_volume)
 
-    updated_keywords = []
-
-    Keyword.where(project_id: project_id).find_in_batches(batch_size: 500) do |batch|
-      sleep(0.1)
-      batch.each do |kw|
-        clean_url = kw.url.to_s.downcase
-        first_folder = clean_url[%r{\.\w+/([^\/]+)}, 1]&.tr('-', ' ')
-
-        next if first_folder.nil?
-
-        selected.each_value do |categories|
-          categories.each do |cat|
-            if first_folder.include?(cat.downcase)
-              best_category = categories.max_by { |c| category_volumes[c] || 0 }
-              next if best_category.nil? || kw.keyword_category == best_category
-
-              kw.keyword_category = best_category
-            else
-              kw.keyword_category = '(blank)'
-            end
-            updated_keywords << kw
-          end
-        end
-      end
-
-      if updated_keywords.any?
-        Keyword.import(
-          updated_keywords,
-          on_duplicate_key_update: {
-            conflict_target: [:id],
-            columns: [:keyword_category]
-          }
-        )
-        updated_keywords.clear
-      end
-    end
+    Keyword.push_categories_into_keywords(project_id, selected)
+    # Keyword.where(project_id: project_id).find_in_batches(batch_size: 500) do |batch|
+    #    sleep(0.1)
+    #    batch.each do |kw|
+    #      clean_url = kw.url.to_s.downcase
+    #      first_folder = clean_url[%r{\.\w+/([^\/]+)}, 1]&.tr('-', ' ')
+    #
+    #      next if first_folder.nil?
+    #
+    #      selected.each do |brand, categories|
+    #        next unless brand == kw.brand
+    #
+    #        categories.each do |cat|
+    #          if first_folder.include?(cat.downcase)
+    #            break if kw.keyword_category == cat
+    #
+    #            kw.keyword_category = cat
+    #          else
+    #            kw.keyword_category = '(blank)'
+    #          end
+    #          updated_keywords << kw
+    #          break if kw.keyword_category != '(blank)'
+    #        end
+    #      end
+    #    end
+    #
+    #    if updated_keywords.any?
+    #      Keyword.import(
+    #        updated_keywords,
+    #        on_duplicate_key_update: {
+    #          conflict_target: [:id],
+    #          columns: [:keyword_category]
+    #        }
+    #      )
+    #      updated_keywords.clear
+    #    end
+    #  end
 
     redirect_to project_path(project_id), notice: 'Categories applied to matching URLs'
   end

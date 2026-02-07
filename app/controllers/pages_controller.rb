@@ -16,5 +16,18 @@ class PagesController < ApplicationController
                             .sum { |project| project.keywords.count }
     @ngram_count = Project.where(user: current_user)
                           .sum { |project| project.ngrams.count }
+    @keywords_limited = keyword_category_chart_data
+  end
+
+  def keyword_category_chart_data
+    counts = Keyword.group(:keyword_category).order('count_all DESC').count
+
+    # Split top 10 and the rest
+    top_10 = counts.first(10).to_h
+    other_total = counts.drop(10).sum { |_, v| v }
+
+    # Add "Other" if there are more than 10
+    top_10['Other'] = other_total if other_total.positive?
+    top_10
   end
 end

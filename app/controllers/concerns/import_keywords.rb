@@ -29,13 +29,19 @@ module ImportKeywords
     content = content.sub("\xEF\xBB\xBF", '').gsub("\r", '').strip
     row_count = CSV.parse(content, headers: true).size
     file.rewind
-    if @project.keywords.count + row_count > 100_000
+    # comes from the keyword model and the defined limit within
+    if @project.keywords.count + row_count > Keyword::MAX_KEYWORDS_PER_PROJECT
       raise UploadLimit,
             'File is too large. Expected less than 100k rows'
+    end
+    if Keyword.where(project_id: @project.user.project_ids).count + row_count > Keyword::MAX_KEYWORDS_PER_USER
+      raise UploadLimit,
+            'File is too large. Expected less than 150k rows'
     end
 
     normalizer = proc do |field|
       case field.downcase
+        # normalizing based on what headers a user enters
       when 'volume', 'search volume'
         'search_volume'
       else

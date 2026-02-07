@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
 module ProjectsHelper
+  def parent_wrapper =  'bg-white text-gray-600 text-left font-medium text-sm flex-1 mt-4 px-5 rounded-sm shadow-xl h-60'
+  def table_body_styling =  {
+          row_border: 'border border-dashed border-red-500',
+          index_styling: 'border-x border-dashed border-red-500 p-0.5 px-1 text-center h-5 w-4',
+          name_styling: 'p-0.5 px-1 max-w-40 overflow-hidden truncate whitespace-nowrap flex-1',
+          keyword_styling: 'px-5 px-1 w-4 overflow-hidden truncate whitespace-nowrap'
+        }
   def project_id_kw_table
     {
       title: 'Keywords',
       columns: ['#', 'Keyword', 'Search Volume'],
       entry_key: 'name',
       styling: {
-        parent_wrapper: 'text-gray-600 row-span-3 col-span-2 text-left font-medium h-auto bg-white mt-4 px-5 rounded-xl shadow-xl',
+        parent_wrapper: parent_wrapper ,
         table_scroll_behavior: 'overflow-y-scroll max-h-67',
         table_header_styling: 'bg-neutral-200 text-center',
 
@@ -32,16 +39,11 @@ module ProjectsHelper
       urls: @top_urls,
       entry_key: 'name',
       styling: {
-        parent_wrapper: 'bg-white text-gray-600 text-left font-medium text-sm flex-1 mt-4 px-5 rounded-xl shadow-xl h-[340px]',
+        parent_wrapper: parent_wrapper ,
         table_header_styling: 'text-red-500 text-sm bg-white ',
-        table_scroll_behavior: 'overflow-y-scroll w-full flex-1  h-60',
+        table_scroll_behavior: 'overflow-y-scroll w-full flex-1  max-h-60',
         overflow: 'overflow-y-scroll ',
-        table_body_styling: {
-          row_border: 'border border-dashed border-red-500',
-          index_styling: 'border-x border-dashed border-red-500 p-0.5 px-1 text-center h-5 w-4',
-          name_styling: 'p-0.5 px-1 max-w-40 overflow-hidden truncate whitespace-nowrap flex-1',
-          keyword_styling: 'px-5 px-1 w-4 overflow-hidden truncate whitespace-nowrap'
-        }
+         table_body_styling: table_body_styling 
       },
 
       include: {
@@ -58,16 +60,11 @@ module ProjectsHelper
       entries: @top_categories,
       entry_key: 'name',
       styling: {
-        parent_wrapper: 'bg-white text-gray-600 text-left font-medium text-sm flex-1 mt-4 px-5 rounded-xl shadow-xl h-[340px]',
+        parent_wrapper:parent_wrapper ,
         table_header_styling: 'text-red-500 text-sm bg-white ',
-        table_scroll_behavior: 'overflow-y-scroll w-full flex-1 h-60',
+        table_scroll_behavior: 'overflow-y-scroll w-full flex-1 max-h-60',
         overflow: 'overflow-y-scroll ',
-        table_body_styling: {
-          row_border: 'border border-dashed border-red-500',
-          index_styling: 'border-x border-dashed border-red-500 p-0.5 px-1 text-center h-5 w-4',
-          name_styling: 'p-0.5 px-1 max-w-40 overflow-hidden truncate whitespace-nowrap flex-1',
-          keyword_styling: 'px-5 px-1 w-4 overflow-hidden truncate whitespace-nowrap '
-        }
+        table_body_styling: table_body_styling 
       },
       table_primary_field: 'url'
 
@@ -81,16 +78,12 @@ module ProjectsHelper
       entries: @ngrams,
       entry_key: 'phrase',
       styling: {
-        parent_wrapper: ' bg-white text-gray-600 text-left font-medium text-sm flex-1 mt-4 px-5 rounded-xl shadow-xl h-[340px]',
+        parent_wrapper:parent_wrapper ,
         table_header_styling: 'text-red-500 text-sm bg-white ',
         table_scroll_behavior: 'overflow-y-scroll w-full flex-1 max-h-65',
         overflow: 'overflow-y-scroll ',
-        table_body_styling: {
-          row_border: 'border border-dashed border-red-500',
-          index_styling: 'border-x border-dashed border-red-500 p-0.5 px-1 text-center h-5 w-4',
-          name_styling: 'p-0.5 px-1 max-w-40 overflow-hidden truncate whitespace-nowrap flex-1',
-          keyword_styling: 'px-5 px-1 w-4 overflow-hidden truncate whitespace-nowrap'
-        }
+               table_body_styling: table_body_styling 
+
       },
       table_primary_field: 'url',
       include: {
@@ -106,7 +99,7 @@ module ProjectsHelper
       columns: [],
       entry_key: 'keyword_count',
       styling: {
-        parent_wrapper: 'bg-zinc-500 row-span-3 col-span-2 text-left font-medium text-white h-300 mt-4 px-5 rounded-xl shadow-xl',
+        parent_wrapper: 'bg-zinc-500 row-span-3 col-span-2 text-left font-medium text-white max-h-300 mt-4 px-5 rounded-sm shadow-xl',
         table_scroll_behavior: 'overflow-y-scroll max-h-150',
         table_header_styling: 'nil',
 
@@ -135,34 +128,50 @@ module ProjectsHelper
   def glass_red_chart_options
     {
       colors: ['#FF4D4D', '#FFD1D1', '#FF8888', '#FF9999'],
+      height:"100",
       library: {
         # this is Chart.js "options" (no extra :options wrapper)
-        responsive: true,
-        backgroundColor: 'rgba(255,255,255,0.4)', # slightly glassy
+          responsive: true,
+          maintainAspectRatio:false,
+        backgroundColor: 'rgba(0,255,255,0.4)', # slightly glassy
         plugins: {
+          title: {
+            fullSize:false,
+            font: { size: 14 }
+          },
+          datalabels: {
+            display: true,
+            anchor: 'end',
+            align: 'top',
+            color: 'rgba(255,255,255,0.9)',
+            font: { size: 14, family: 'Inter', weight: '600' },
+            formatter: ->(value) { value } # shows count value on top of each bar
+          },
           legend: {
             display: false
             # If you later enable legend and want spacing:
             # labels: { boxPadding: 4 }
           },
+
           tooltip: {
             backgroundColor: 'rgba(255, 255, 255, 0.85)',
             borderColor: 'rgba(255, 77, 77, 0.3)',
             borderWidth: 1,
             titleColor: '#FF4D4D',
             bodyColor: '#444',
-            titleFont: { size: 20, weight: '400' },
-            bodyFont: { size: 16 },
+            titleFont: { size: 16, weight: '300' },
+            bodyFont: { size: 12},
             cornerRadius: 6,
             padding: 8
           }
         },
+         maxBarThickness: 50,
+        
+
+
         scales: {
-          x: {
-            ticks: {
-              color: 'rgba(255, 255, 255, 0.9)',
-              font: { size: 16, family: 'Inter' }
-            },
+          x: {display: true,
+            title: { display: true },
             grid: { color: 'rgba(255, 255, 255, 0.05)' }
           },
           y: {
@@ -171,6 +180,7 @@ module ProjectsHelper
               font: { size: 16 }
             },
             grid: { color: 'rgba(255, 255, 255, 0.08)' }
+
           }
         }
       }
