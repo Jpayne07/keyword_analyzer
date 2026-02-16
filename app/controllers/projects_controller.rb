@@ -10,6 +10,8 @@ class ProjectsController < ApplicationController
   include ExportToZip
   include ImportKeywords
   include LoadInSuggestions
+  include AggregateCategories
+
   # include ExportProcessing
   require 'csv'
   require 'zip'
@@ -116,9 +118,9 @@ class ProjectsController < ApplicationController
           key_holder << key
         end
         render turbo_stream: turbo_stream
-          .update('modal',
-                  partial: 'components/modals/category_selection_form',
-                  locals: { key_holder: key_holder })
+                             .update('modal',
+                                     partial: 'components/modals/category_selection_form',
+                                     locals: { key_holder: key_holder })
         kw_to_ngram if params[:accept_ngram].present?
         return
       end
@@ -146,6 +148,24 @@ class ProjectsController < ApplicationController
     @project.keywords.build
   end
 
+  def extract_folder(url)
+    clean_url = url.to_s.downcase
+    clean_url[%r{\.\w+/([^/]+)}, 1]&.tr('-', ' ')
+  end
+
+  def keyword_import(updated_keywords)
+    return unless updated_keywords.any?
+
+    Keyword.import(
+      updated_keywords,
+      on_duplicate_key_update: {
+        conflict_target: [:id],
+        columns: [:keyword_category]
+      }
+    )
+    updated_keywords.clear
+  end
+
   def category_select
     selected = params[:selected_categories] || {}
     project_id = params[:project_id]
@@ -156,49 +176,40 @@ class ProjectsController < ApplicationController
       return
     end
 
-    category_volumes = Keyword
-                       .where(project_id: project_id)
-                       .group(:keyword_category)
-                       .sum(:search_volume)
+    category_volumes = Hash.new(0)
 
-    Keyword.push_categories_into_keywords(project_id, selected)
-    # Keyword.where(project_id: project_id).find_in_batches(batch_size: 500) do |batch|
-    #    sleep(0.1)
-    #    batch.each do |kw|
-    #      clean_url = kw.url.to_s.downcase
-    #      first_folder = clean_url[%r{\.\w+/([^\/]+)}, 1]&.tr('-', ' ')
-    #
-    #      next if first_folder.nil?
-    #
-    #      selected.each do |brand, categories|
-    #        next unless brand == kw.brand
-    #
-    #        categories.each do |cat|
-    #          if first_folder.include?(cat.downcase)
-    #            break if kw.keyword_category == cat
-    #
-    #            kw.keyword_category = cat
-    #          else
-    #            kw.keyword_category = '(blank)'
-    #          end
-    #          updated_keywords << kw
-    #          break if kw.keyword_category != '(blank)'
-    #        end
-    #      end
-    #    end
-    #
-    #    if updated_keywords.any?
-    #      Keyword.import(
-    #        updated_keywords,
-    #        on_duplicate_key_update: {
-    #          conflict_target: [:id],
-    #          columns: [:keyword_category]
-    #        }
-    #      )
-    #      updated_keywords.clear
-    #    end
-    #  end
+    updated_keywords = []
 
+    Keyword.where(project_id: project_id).find_in_batches(batch_size: 500) do |batch| # this should be a standalone method
+      sleep(0.1)
+      batch.each do |kw|
+        first_folder = extract_folder(kw.url)
+        next if first_folder.nil?
+
+        aggregate_categories(selected, first_folder, category_volumes, kw) # located in aggregate_categories
+      end
+    end
+    # I have the categories {keyword => 200} etc
+    # now I need to find the best suited category in case the first folder contains a compound phrase
+    # cycle through each kw in batches of 500 and see if the first folder has any items from the category_volumes
+    #
+    sorted_volumes = category_volumes.sort_by { |_key, value| value }.reverse.to_h
+    Keyword.where(project_id: project_id).find_in_batches(batch_size: 500) do |batch|
+      sleep(0.1)
+      batch.each do |keyword|
+        first_folder = extract_folder(keyword.url)
+        if first_folder.blank?
+          keyword.keyword_category = '(Blank)'
+          updated_keywords << keyword
+          next
+        else
+          assign_categories(first_folder, sorted_volumes, keyword) # located in "aggregate_categories"
+          updated_keywords << keyword
+        end
+      end
+      keyword_import(updated_keywords)
+    end
+    # now that I have the log to store category_volumes, I should rerun the function above, but this time assign the keyword categories
     redirect_to project_path(project_id), notice: 'Categories applied to matching URLs'
   end
 

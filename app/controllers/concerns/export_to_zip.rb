@@ -26,7 +26,7 @@ module ExportToZip
               SUM(estimated_traffic) AS estimated_traffic,
               COUNT(name) AS kw_count")
                      .order('search_volume DESC')
-                     .limit(5)
+                     .limit(25)
 
     temp_file = Tempfile.new(['keyword_export', '.zip'])
 

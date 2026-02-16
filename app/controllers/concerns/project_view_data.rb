@@ -3,6 +3,7 @@
 # app/controllers/concerns/project_view_data.rb
 module ProjectViewData
   extend ActiveSupport::Concern
+
   included do
     before_action :project_id_tables, only: [:show]
   end
@@ -29,7 +30,7 @@ module ProjectViewData
                       .group(:keyword_category)
                       .select('keyword_category AS name, SUM(Search_Volume) AS search_volume, SUM(estimated_traffic) AS estimated_traffic, COUNT(name) AS kw_count')
                       .order('search_volume DESC')
-                      .limit(5)
+                      .limit(25)
     @keywords = Keyword
                 .where(project_id: @project.id)
                 .limit(kw_limit)

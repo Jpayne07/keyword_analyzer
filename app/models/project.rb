@@ -8,7 +8,7 @@ class Project < ApplicationRecord
   validate :projects_count_within_limit, on: :create
   accepts_nested_attributes_for :keywords, allow_destroy: true
   before_destroy :destroy_keywords_in_batches
-  PROJECT_LIMIT = 5
+  PROJECT_LIMIT = 100
 
   def projects_count_within_limit
     return unless user.projects.reload.count >= PROJECT_LIMIT

@@ -1,4 +1,4 @@
-class Keyword::Categorize_Keywords
+class Keyword::CategorizeKeywords
   def initialize(keyword, selected, updated_keywords)
     @keyword = keyword
     @selected = selected
@@ -16,7 +16,7 @@ class Keyword::Categorize_Keywords
     keyword_holder << @keyword
   end
 
-  def self.find_first_category(categories, first_folder)
+  def find_first_category(categories, first_folder)
     categories.each do |cat|
       if first_folder.include?(cat.downcase)
         break if @keyword.keyword_category == cat
@@ -30,7 +30,7 @@ class Keyword::Categorize_Keywords
     update_keywords(@keyword_holder)
   end
 
-  def self.match_selected_with_url(updated_keywords, first_folder)
+  def match_selected_with_url(selected, updated_keywords, first_folder)
     @selected.each do |brand, categories|
       next unless brand == @keyword.brand
 

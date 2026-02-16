@@ -1,14 +1,19 @@
-<div class="grid grid-flow-row grid-rows-2 grid-cols-2  max-w-6xl m-auto gap-20 my-10 h-125 items-center">
-  <div class="w-full max-w-lg">
-    <%= render partial: "/components/tables/keyword_table", locals: { 
-        entries: @projects, 
-        current_page: @current_page, 
-        table_config: home_projects_table,
-        styling: home_projects_table[:styling],
-        entry_key: home_projects_table[:entry_key]
-       } %>
+<div class="max-w-lg mx-auto my-10 p-10">
+  <div class="w-full content-center">
+    <%= render partial: "/components/tables/keyword_table",
+    locals: {
+      entries: @projects,
+      current_page: @current_page,
+      table_config: home_projects_table,
+      styling: home_projects_table[:styling],
+      entry_key: home_projects_table[:entry_key],
+    } %>
   </div>
-  <div class="bg-zinc-500 text-white p-6 shadow-lg rounded-md max-w-lg my-10 w-full order-3">
+  <div
+    class="
+      bg-zinc-500 text-white p-6 my-5 shadow-lg rounded-md w-4xl m-auto w-full
+    "
+  >
     <ul class="space-y-2">
       <li class="flex justify-between border-b border-red-400 pb-1">
         <span>1 Total Keywords</span>
@@ -24,7 +29,11 @@
       </li>
     </ul>
   </div>
-  <div class="mx-auto w-full max-w-md">
-    <%= link_to "Add New Project", new_project_path, class: "text-center block bg-red-500 text-white p-2 px-5 drop-shadow-md content-center " %>
+  <div class="m-auto w-full max-w-md">
+    <%= link_to "Add New Project",
+    new_project_path,
+    class:
+      "text-center block bg-red-500 text-white p-2 px-5 drop-shadow-md content-center " %>
   </div>
 </div>
+

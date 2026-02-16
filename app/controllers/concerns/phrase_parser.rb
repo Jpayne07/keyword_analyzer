@@ -79,7 +79,7 @@ module PhraseParser
         end
       end
 
-      top_50 = kw_holder.sort_by { |_, v| -v[:count] }.first(10).to_h
+      top_50 = kw_holder.sort_by { |_, v| -v[:count] }.first(50).to_h
       brand_category << { brand => top_50 }
     end
     brand_category

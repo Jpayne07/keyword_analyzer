@@ -1,8 +1,6 @@
 <tr class="<%=styling.dig(:table_body_styling, :row_border) %>">
   <td class="<%= styling.dig(:table_body_styling, :index_styling) %>">
     <%= current_page ? index + 1 + ((current_page - 1) * 10) : index + 1 %></td>
-  </td>
-    
 
   <% case entry.class.name %>
     <% when "Keyword" %>
@@ -15,15 +13,15 @@
 
       <%if defined?(includes) && includes&.[](:traffic) && includes&.[](:kw_count)%>
       <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
-        <%=entry.estimated_traffic%>
+        <%=number_with_delimiter(entry.estimated_traffic)%>
       </td>
       <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
-        <%=entry.kw_count%>
+        <%=number_with_delimiter(entry.kw_count)%>
       </td>
 
       <%elsif defined?(includes) && includes&.[](:kw_count)%>
       <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
-        <%=entry.kw_count%>
+      <%=number_with_delimiter(entry.kw_count)%>
       </td>
 
       <% else nil%>
@@ -38,18 +36,18 @@
 
       <%if defined?(includes) && includes&.[](:traffic) && includes&.[](:kw_count)%>
       <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
-        <%=entry.est_traffic%>
+        <%=number_with_delimiter(entry.est_traffic)%>
       </td>
       <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
-        <%=entry.kw_count%>
+        <%=number_with_delimiter(entry.kw_count)%>
       </td>
 
       <%elsif defined?(includes) && includes&.[](:kw_count)%>
       <td class="<%= styling.dig(:table_body_styling, :keyword_styling) %>">
-        <%=entry.count%>
+        <%=number_with_delimiter(entry.count)%>
       </td>
 
-  <%end%>
+    <%end%>
     <% when "Project" %>
     <td class="<%= styling.dig(:table_body_styling, :name_styling) %>">
       <%= link_to entry[entry_key], project_path(entry)%>
