@@ -14,7 +14,7 @@ class KeywordExportQuery
   def self.call(project:, kw_query:, url_query:, ngram_query:)
     {
       keywords: Keyword.search(kw_query, project.id),
-      top_urls: Keyword.search_insights(url_query, project.id),
+       top_urls: Keyword.search_insights(url_query, project.id),
       ngrams: Ngram.search(ngram_query, project.id),
       top_categories: Keyword
                       .where(project_id: project.id)
