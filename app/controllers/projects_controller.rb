@@ -148,11 +148,6 @@ class ProjectsController < ApplicationController
     @project.keywords.build
   end
 
-  def extract_folder(url)
-    clean_url = url.to_s.downcase
-    clean_url[%r{\.\w+/([^/]+)}, 1]&.tr('-', ' ')
-  end
-
   def keyword_import(updated_keywords)
     return unless updated_keywords.any?
 
@@ -166,6 +161,11 @@ class ProjectsController < ApplicationController
     updated_keywords.clear
   end
 
+  def extract_folder(url)
+    clean_url = url.to_s.downcase
+    clean_url[%r{\.\w+/([^/]+)}, 1]&.tr('-', ' ')
+  end
+
   def category_select
     selected = params[:selected_categories] || {}
     project_id = params[:project_id]
@@ -176,24 +176,16 @@ class ProjectsController < ApplicationController
       return
     end
 
-    category_volumes = Hash.new(0)
-
     updated_keywords = []
 
-    Keyword.where(project_id: project_id).find_in_batches(batch_size: 500) do |batch| # this should be a standalone method
-      sleep(0.1)
-      batch.each do |kw|
-        first_folder = extract_folder(kw.url)
-        next if first_folder.nil?
-
-        aggregate_categories(selected, first_folder, category_volumes, kw) # located in aggregate_categories
-      end
-    end
+    aggregated = CategoryAggregator
+                 .new(project_id: project_id, selected: selected)
+                 .call
     # I have the categories {keyword => 200} etc
     # now I need to find the best suited category in case the first folder contains a compound phrase
     # cycle through each kw in batches of 500 and see if the first folder has any items from the category_volumes
     #
-    sorted_volumes = category_volumes.sort_by { |_key, value| value }.reverse.to_h
+    sorted_volumes = aggregated.sort_by { |_key, value| value }.reverse.to_h
     Keyword.where(project_id: project_id).find_in_batches(batch_size: 500) do |batch|
       sleep(0.1)
       batch.each do |keyword|
