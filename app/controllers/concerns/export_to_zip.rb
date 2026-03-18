@@ -9,40 +9,39 @@ module ExportToZip
       records.each { |record| csv << yield(record) }
     end
   end
-# app/services/keyword_export_query.rb
-class KeywordExportQuery
-  def self.call(project:, kw_query:, url_query:, ngram_query:)
-    {
-      keywords: Keyword.search(kw_query, project.id),
-       top_urls: Keyword.search_insights(url_query, project.id),
-      ngrams: Ngram.search(ngram_query, project.id),
-      top_categories: Keyword
-                      .where(project_id: project.id)
-                      .group(:keyword_category)
-                      .select("keyword_category AS name,
+
+  # app/services/keyword_export_query.rb
+  class KeywordExportQuery
+    def self.call(project:, kw_query:, url_query:, ngram_query:)
+      {
+        keywords: Keyword.search(kw_query, project.id),
+        top_urls: Keyword.search_insights(url_query, project.id),
+        ngrams: Ngram.search(ngram_query, project.id),
+        top_categories: Keyword
+                        .where(project_id: project.id)
+                        .group(:keyword_category)
+                        .select("keyword_category AS name,
                                SUM(Search_Volume) AS search_volume,
                                SUM(estimated_traffic) AS estimated_traffic,
                                COUNT(name) AS kw_count")
-                      .order('search_volume DESC')
-                      .limit(25)
-    }
+                        .order('search_volume DESC')
+                        .limit(25)
+      }
+    end
   end
-end
-
 
   def export_zip
+    data = KeywordExportQuery.call(
+      project: @project,
+      kw_query: session[:kw_query],
+      url_query: session[:url_query],
+      ngram_query: session[:ngram_query]
+    )
 
-data = KeywordExportQuery.call(
-  project: @project,
-  kw_query: session[:kw_query],
-  url_query: session[:url_query],
-  ngram_query: session[:ngram_query]
-)
-
-keywords = data[:keywords]
-top_urls = data[:top_urls]
-ngrams_for_export = data[:ngrams]
-top_categories = data[:top_categories]
+    keywords = data[:keywords]
+    top_urls = data[:top_urls]
+    ngrams_for_export = data[:ngrams]
+    top_categories = data[:top_categories]
     temp_file = Tempfile.new(['keyword_export', '.zip'])
 
     Zip::OutputStream.open(temp_file.path) do |zip|
